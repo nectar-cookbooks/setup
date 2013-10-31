@@ -105,7 +105,7 @@ if node['qcloud']['create_users'] then
       uid 54000 + num
       gid store_id.downcase()
       system true
-      home "#{mount_dir}/#{store_id}"
+      home "#{node['qcloud']['mount_dir']}/#{store_id}"
       comment ''
       shell '/sbin/nologin'
     end
