@@ -1,0 +1,6 @@
+DEVICE="eth1"
+BOOTPROTO="dhcp"
+MTU="9000"
+IPV6_MTU="9000"
+ONBOOT="yes"
+TYPE="Ethernet"

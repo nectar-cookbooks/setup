@@ -27,9 +27,11 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-include_recipe "autofs::default"
+package "autofs" do
+  not_if { File::exists?("/etc/auto.master") }
+end
 
-# Validate the Store ids
+# Validate the Store ids 
 node['qcloud']['stores'].each() do |store_id|
   if ! /Q[0-9][0-9]([0-9][0-9])?/.match(store_id) then
     raise "Invalid store id (#{store_id}) : expected Qnn or Qnnnn"
@@ -44,7 +46,38 @@ node['qcloud']['stores'].each() do |store_id|
   end
 end
 
-# Configure private network
+# Configure private network.  
+if platform?("redhat", "centos", "fedora", "scientific") then
+  cookbook_file "/etc/sysconfig/network-scripts/ifcfg-eth1" do
+    source "ifcfg-eth1"
+    not_if { File::exists?("/etc/sysconfig/network-scripts/ifcfg-eth1") }
+    notifies :run, "bash[ifup]", :immediately
+  end
+  bash "ifup" do
+    action :nothing
+    code "ifup eth1"
+  end
+elsif platform?("ubuntu") then
+  ruby_block "add-interface" do
+    block do
+      config = <<- EOS
+        # The secondary network interface - added by Chef
+        auto eth1
+        iface eth1 inet dhcp
+        pre-up /sbin/ifconfig eth1 mtu 9000
+      EOS
+      file = Chef::Util::FileEdit.new("/etc/network/interfaces")
+      file.insert_line_if_no_match("/eth1/", config)
+      file.write_file
+    end
+    notifies :restart, "service[networking]", :immediately
+  end
+  service "networking" do
+    action :nothing
+  end
+else
+  raise "Platform #{node['platform']} not supported"
+end
 
 # Create local users to match the standard uids in the collection filesystems.
 if node['qcloud']['create_users'] then
@@ -71,6 +104,31 @@ if node['qcloud']['create_users'] then
   end  
 end
 
-# Create autofs mounts
+# Create / update the autofs mounts
+ruby_block "edit_auto_master" do
+  block do
+    file = Chef::Util::FileEdit.new("/etc/auto.master")
+    file.insert_line_if_no_match("/auto.qcloud/", "/- file:/etc/auto.qcloud")
+    file.write_file
+  end
+end
+if platform?("redhat", "centos", "fedora", "scientific") then
+  opts = "-rw,nfsvers=3,hard,intr,bg,nosuid,nodev,timeo=15,retrans=5,nolock"
+else
+  opts = "-rw,nfsvers=3,hard,intr,bg,nosuid,nodev,timeo=15,retrans=5"
+end
+template "/etc/auto.qcloud" do
+  source "direct_map.erb"
+  mode 0444
+  variables ({
+    :store_ids => node['qcloud']['stores'],
+    :nfs_server => node['qcloud']['nfs_server'],
+    :mount_dir => node['qcloud']['mount_dir'],
+    :opts => opts
+  })
+  notifies :restart, "service[autofs]", :immediately
+end
 
-# Restart autofs
+service "autofs" do
+  action :nothing
+end
