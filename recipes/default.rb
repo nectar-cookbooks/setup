@@ -81,9 +81,13 @@ end
 
 # Create local users to match the standard uids in the collection filesystems.
 if node['qcloud']['create_users'] then
+  group 'webdav' do
+    gid 48
+    system true
+  end
   user 'webdav' do
     uid 48
-    gid 48
+    gid 'webdav'
     system true
     comment 'WebDAV'
     shell '/sbin/nologin'
@@ -93,11 +97,15 @@ if node['qcloud']['create_users'] then
     if num > 999 then
       raise "The store_id to uid mapping is not defined for #{store_id}"
     end
-    user store_id.downcase() do
-      uid 54000 + num
+    group store_id.downcase() do
       gid 54000 + num
       system false
-      home "/data/#{store_id}"
+    end
+    user store_id.downcase() do
+      uid 54000 + num
+      gid store_id.downcase()
+      system true
+      home "#{mount_dir}/#{store_id}"
       comment ''
       shell '/sbin/nologin'
     end
