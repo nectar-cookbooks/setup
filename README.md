@@ -32,11 +32,18 @@ The recipe is controlled by the following attributes.
 
 * `node['qcloud']['mount_dir']` - the directory in which the collections will be automounted.  The defaults to "/data".
 
-* `node['qcloud']['nfs_server']` - the address of the NFS server.
+* `node['qcloud']['nfs_server']` - the address of the NFS server.  You should not need to change this.
 
-* `node['qcloud']['store_ids']` - an array (list) of store ids for RDSI collections.  These are (currently) of the form "Qnn" or "Qnnnn".
+* `node['qcloud']['store_ids']` - an array (list) of store ids for RDSI collections.  These are (currently) of the form "Qnn" or "Qnnnn".  Defaults to an empty list ... so you need to override this; e.g. by adding this to your node.json
 
-* `node['qcloud']['create_users']` - if true, the recipe will create local users and groups to match the uid/gid numbers you would expect to see on the collection.
+```json
+  "qcloud": {
+    store_ids: [ "q0031" ]
+  },
+
+```
+
+* `node['qcloud']['create_users']` - if true, the recipe will create local users and groups to match the uid/gid numbers you would expect to see on the collection.  Defaults to true.
 
 TO-DO LIST
 ==========
