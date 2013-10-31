@@ -60,7 +60,7 @@ if platform?("redhat", "centos", "fedora", "scientific") then
 elsif platform?("ubuntu") then
   ruby_block "add-interface" do
     block do
-      config = <<- EOS
+      config = <<-EOS
         # The secondary network interface - added by Chef
         auto eth1
         iface eth1 inet dhcp
