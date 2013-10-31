@@ -126,7 +126,7 @@ else
   opts = "-rw,nfsvers=3,hard,intr,bg,nosuid,nodev,timeo=15,retrans=5"
 end
 template "/etc/auto.qcloud" do
-  source "direct_map.erb"
+  source "autofs_direct_map.erb"
   mode 0444
   variables ({
     :store_ids => node['qcloud']['stores'],
