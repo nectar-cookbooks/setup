@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: qcloud
-# Recipe:: default
+# Recipe:: mount_rdsi_collections
 #
 # Copyright (c) 2013, The University of Queensland
 # All rights reserved.
