@@ -89,7 +89,7 @@ if node['qcloud']['create_users'] then
     shell '/sbin/nologin'
   end
   node['qcloud']['stores'].each() do |store_id|
-    num = /Q[0-9]+/.match(store_id).to_i()
+    num = /Q([0-9]+)/.match(store_id)[1].to_i()
     if num > 999 then
       raise "The store_id to uid mapping is not defined for #{store_id}"
     end
