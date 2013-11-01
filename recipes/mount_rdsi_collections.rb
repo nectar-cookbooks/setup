@@ -27,6 +27,16 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+if platform?("redhat", "centos", "fedora", "scientific") then
+  package "nfs-utils" do
+  end
+elsif platform?("ubuntu") then
+  package "nfs-common" do
+  end
+else
+  raise "Platform #{node['platform']} not supported"
+end  
+
 package "autofs" do
   not_if { File::exists?("/etc/auto.master") }
 end
