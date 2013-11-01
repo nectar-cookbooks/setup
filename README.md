@@ -34,11 +34,11 @@ The recipe is controlled by the following attributes.
 
 * `node['qcloud']['nfs_server']` - the address of the NFS server.  You should not need to change this.
 
-* `node['qcloud']['store_ids']` - an array (list) of store ids for RDSI collections.  These are (currently) of the form "Qnn" or "Qnnnn".  Defaults to an empty list ... so you need to override this; e.g. by adding this to your node.json
+* `node['qcloud']['store_ids']` - an array (list) of store ids for RDSI collections.  These are (currently) of the form "Qnn" or "Qnnnn".  Defaults to an empty list ... so you need to override this; e.g. by adding something like the following to your "node.json" file.
 
 ```json
   "qcloud": {
-    "store_ids": [ "q0031" ]
+    "store_ids": [ "Q0031" ]
   },
 
 ```
