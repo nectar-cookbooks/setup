@@ -38,7 +38,7 @@ The recipe is controlled by the following attributes.
 
 ```json
   "qcloud": {
-    store_ids: [ "q0031" ]
+    "store_ids": [ "q0031" ]
   },
 
 ```
