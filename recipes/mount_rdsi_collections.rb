@@ -67,7 +67,7 @@ elsif platform?("ubuntu") then
         pre-up /sbin/ifconfig eth1 mtu 9000
       EOS
       file = Chef::Util::FileEdit.new("/etc/network/interfaces")
-      file.insert_line_if_no_match("/eth1/", config)
+      file.insert_line_if_no_match("iface eth1 ", config)
       file.write_file
     end
     notifies :restart, "service[networking]", :immediately
@@ -116,7 +116,7 @@ end
 ruby_block "edit_auto_master" do
   block do
     file = Chef::Util::FileEdit.new("/etc/auto.master")
-    file.insert_line_if_no_match("/auto.qcloud/", "/- file:/etc/auto.qcloud")
+    file.insert_line_if_no_match("auto.qcloud", "/- file:/etc/auto.qcloud")
     file.write_file
   end
 end
