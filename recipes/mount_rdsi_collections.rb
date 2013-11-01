@@ -32,7 +32,7 @@ package "autofs" do
 end
 
 # Validate the Store ids 
-node['qcloud']['stores'].each() do |store_id|
+node['qcloud']['store_ids'].each() do |store_id|
   if ! /Q[0-9][0-9]([0-9][0-9])?/.match(store_id) then
     raise "Invalid store id (#{store_id}) : expected Qnn or Qnnnn"
   end
@@ -92,7 +92,7 @@ if node['qcloud']['create_users'] then
     comment 'WebDAV'
     shell '/sbin/nologin'
   end
-  node['qcloud']['stores'].each() do |store_id|
+  node['qcloud']['store_ids'].each() do |store_id|
     num = /Q([0-9]+)/.match(store_id)[1].to_i()
     if num > 999 then
       raise "The store_id to uid mapping is not defined for #{store_id}"
@@ -129,7 +129,7 @@ template "/etc/auto.qcloud" do
   source "autofs_direct_map.erb"
   mode 0444
   variables ({
-    :store_ids => node['qcloud']['stores'],
+    :store_ids => node['qcloud']['store_ids'],
     :nfs_server => node['qcloud']['nfs_server'],
     :mount_dir => node['qcloud']['mount_dir'],
     :opts => opts
