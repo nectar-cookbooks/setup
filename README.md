@@ -1,15 +1,20 @@
 Overview
 ========
 
-This cookbook contains some recipes for QCloud specific configuration
+This cookbook contains some recipes for QCloud specific configuration.
 
-Dependencies
-============
+Recipe - "setup"
+================
 
-None
+The "qcloud::setup" recipe does some simple configuration that typically needs to be done for a new NeCTAR virtual; e.g. setting the timezone.
 
-Recipes
-=======
+Attributes:
+-----------
+
+* `node['tz']` - The required timezone; e.g. "Australia/Brisbane".  If no timezone is specified, the timezone is not changed.
+
+Recipe - "mount_rdsi_collections"
+=================================
 
 The "qcloud::mount_rdsi_collections" recipe allows you to NFS mount your RDSI collections on a QCloud virtual.  The recipe configures access to the private network that hosts the NFS server, configures automounting using "autofs" and optionally creates local users and groups to match the default uids used on a RDSI collection filesystem as provisioned by QCIF.
 
