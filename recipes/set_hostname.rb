@@ -61,8 +61,9 @@ aliases = [ hostname ]
 ip_fqdns.each() do |ip_fqdn|
   if fqdn != ip_fqdn then
     aliases << ip_fqdn
-    ip_fqdn =~ /^([^.]+)/
-    aliases << $1
+    if ip_fqdn =~ /^([^.]+)\..+/ then
+      aliases << $1
+    end
   end
 end
 
