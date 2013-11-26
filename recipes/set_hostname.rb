@@ -65,7 +65,7 @@ if fqdn != ip_fqdn then
   ip_fqdn =~ /^([^.]+)/
   aliases << $1
 end
-Chef::ApplicationLog.debug("aliases is #{aliases}")
+Chef::Log.debug("aliases is #{aliases}")
 
 
 hostsfile_entry "set hostnames" do
