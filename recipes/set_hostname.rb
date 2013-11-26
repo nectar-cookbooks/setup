@@ -30,11 +30,11 @@
 require 'resolv'
 
 ip = node['ipaddress']
-ip_fqdn = Resolv.new.getname(ip)
+ip_fqdns = Resolv.new.getnames(ip)
 
-fqdn = node['qcloud']['set_fqdn'] || ip_fqdn
+fqdn = node['qcloud']['set_fqdn'] || ip_fqdns[0]
 if fqdn == '*' then
-  fqdn = ip_fqdn
+  fqdn = ip_fqdns[0]
 end
 
 fqdn =~ /^([^.]+)/
@@ -57,16 +57,14 @@ hostsfile_entry "set localhost" do
   action :create
 end
 
-Chef::Log.debug("fqdn is #{fqdn}, ip_fqdn is #{ip_fqdn}")
-
 aliases = [ hostname ]
-if fqdn != ip_fqdn then
-  aliases << ip_fqdn
-  ip_fqdn =~ /^([^.]+)/
-  aliases << $1
+ip_fqdns.each() do |ip_fqdn|
+  if fqdn != ip_fqdn then
+    aliases << ip_fqdn
+    ip_fqdn =~ /^([^.]+)/
+    aliases << $1
+  end
 end
-Chef::Log.debug("aliases is #{aliases}")
-
 
 hostsfile_entry "set hostnames" do
   ip_address ip
