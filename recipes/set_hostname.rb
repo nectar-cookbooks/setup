@@ -27,10 +27,10 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'ipaddr'
+require 'resolv'
 
 ip = node['ipaddress']
-ip_fqdn = IPAddr.new(ip).reverse()
+ip_fqdn = Resolve.new.getname ip
 
 fqdn = node['qcloud']['set_fqdn'] || ip_fqdn
 if fqdn == '*' then
