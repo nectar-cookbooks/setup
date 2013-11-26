@@ -57,12 +57,16 @@ hostsfile_entry "set localhost" do
   action :create
 end
 
+Chef::Application.debug("fqdn is #{fqdn}, ip_fqdn is #{ip_fqdn}")
+
 aliases = [ hostname ]
 if fqdn != ip_fqdn then
   aliases << ip_fqdn
   ip_fqdn =~ /^([^.]+)/
   aliases << $1
 end
+Chef::Application.debug("aliases is #{aliases}")
+
 
 hostsfile_entry "set hostnames" do
   ip_address ip
