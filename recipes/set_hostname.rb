@@ -63,6 +63,8 @@ ip_fqdns.each() do |ip_fqdn|
     aliases << ip_fqdn
     if ip_fqdn =~ /^([^.]+)\..+/ then
       aliases << $1
+    else
+      Chef::Log.debug("It didn't match!?!")
     end
   end
 end
