@@ -34,5 +34,5 @@ if node['qcloud']['tz'] then
 end
 
 if node['qcloud']['set_fqdn'] then
-  include_recipe 'set_hostname'
+  include_recipe 'qcloud::set_hostname'
 end
