@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: qcloud
-# Recipe:: setup
+# Recipe:: set_hostname
 #
 # Copyright (c) 2013, The University of Queensland
 # All rights reserved.
@@ -29,10 +29,52 @@
 
 require 'ipaddr'
 
-if node['qcloud']['tz'] then
-  include_recipe 'timezone-ii::default'
+ip = node['ipaddress']
+ip_fqdn = IPAddr.new(ip).reverse()
+
+fqdn = node['qcloud']['set_fqdn'] || ip_fqdn
+if fqdn == '*' then
+  fqdn = ip_fqdn
 end
 
-if node['qcloud']['set_fqdn'] then
-  include_recipe 'set_hostname'
+fqdn =~ /^([^.]+)/
+hostname = $1
+
+file '/etc/hostname' do
+  content "#{hostname}\n"
+  mode "0644"
+  notifies :reload, "ohai[reload]"
 end
+
+execute "hostname #{hostname}" do
+  only_if { node['hostname'] != hostname }
+  notifies :reload, "ohai[reload]"
+end
+
+hostsfile_entry "set localhost" do
+  ip_address "127.0.0.1"
+  hostname "localhost"
+  action :create
+end
+
+aliases = [ hostname ]
+if fqdn != ip_fqdn then
+  aliases << ip_fqdn
+  ip_fqdn =~ /^([^.]+)/
+  aliases << $1
+end
+
+hostsfile_entry "set hostnames" do
+  ip_address ip
+  hostname fqdn
+  aliases aliases
+  action :create
+  notifies :reload, "ohai[reload]"
+end
+
+ohai "reload" do
+  action :nothing
+end
+
+
+

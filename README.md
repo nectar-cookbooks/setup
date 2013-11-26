@@ -11,7 +11,8 @@ The "qcloud::setup" recipe does some simple configuration that typically needs t
 Attributes:
 -----------
 
-* `node['tz']` - The required timezone; e.g. "Australia/Brisbane".  If no timezone is specified, the timezone is not changed.
+* `node['qcloud']['tz']` - The required timezone; e.g. "Australia/Brisbane".
+* `node['qcloud']['set_fqdn']` - The required FQDN.  If "*", the virtual's hostname is determined by a reverse DNS lookup of the IP address.  On a NeCTAR node, that should give an address of the form "vm-<num>-<num>-<num>-<num>.<cell>.nectar.org.au"
 
 Recipe - "mount_rdsi_collections"
 =================================
