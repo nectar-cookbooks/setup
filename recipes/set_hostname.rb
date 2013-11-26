@@ -30,7 +30,7 @@
 require 'resolv'
 
 ip = node['ipaddress']
-ip_fqdns = Resolv.new.getnames(ip)
+ip_fqdns = Resolv::DNS.new.getnames(ip)
 
 fqdn = node['qcloud']['set_fqdn'] || ip_fqdns[0]
 if fqdn == '*' then
