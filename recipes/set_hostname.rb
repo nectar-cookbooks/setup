@@ -71,12 +71,18 @@ hostsfile_entry "set hostnames" do
   notifies :reload, "ohai[reload]"
 end
 
-hostsfile_entry "set localhost" do
-  ip_address "127.0.0.1"
-  hostname "localhost"
-  action :create_if_missing
-  notifies :reload, "ohai[reload]"
-end
+# 
+# For some reason, 'create_if_missing' below is treated as 'create' which
+# results in an unnecessary update which is potentially harmful for some
+# platforms; e.g. when the out-of-the-box "/etc/hosts" has aliases for 
+# localhost that other applications / services depend on.
+#
+# hostsfile_entry "set localhost" do
+#   ip_address "127.0.0.1"
+#   hostname "localhost"
+#   action :create_if_missing
+#   notifies :reload, "ohai[reload]"
+# end
 
 ohai "reload" do
   action :nothing
