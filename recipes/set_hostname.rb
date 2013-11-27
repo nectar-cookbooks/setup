@@ -37,7 +37,7 @@ if fqdn == '*' then
   fqdn = ip_fqdns[0]
 end
 
-fqdn =~ /^([^.]+)/
+/^([^.]+)/ =~ fqdn
 hostname = $1
 
 file '/etc/hostname' do
@@ -61,8 +61,9 @@ aliases = [ hostname ]
 ip_fqdns.each() do |ip_fqdn|
   if fqdn != ip_fqdn then
     aliases << ip_fqdn
-    if ip_fqdn =~ /^([^.]+)\..+/ then
-      aliases << $1
+    match = /^([^.]+)\..+$/.match(ip_fqdn)
+    if match then
+      aliases << match[1]
     else
       Chef::Log.debug("It (#{ip_fqdn}) didn't match!?!")
     end
