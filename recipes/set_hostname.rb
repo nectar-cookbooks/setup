@@ -59,13 +59,14 @@ end
 
 aliases = [ hostname ]
 ip_fqdns.each() do |ip_fqdn|
-  if fqdn != ip_fqdn then
-    aliases << ip_fqdn
-    match = /^([^.]+)\..+$/.match(ip_fqdn)
+  f = ip_fqdn.to_s()
+  if fqdn != f then
+    aliases << f
+    match = /^([^.]+)\..+$/.match(f)
     if match then
       aliases << match[1]
     else
-      Chef::Log.debug("It (#{ip_fqdn}) didn't match!?!")
+      Chef::Log.debug("It (#{f}) didn't match!?!")
     end
   end
 end
