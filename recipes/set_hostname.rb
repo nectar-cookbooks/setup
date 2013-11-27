@@ -51,12 +51,6 @@ execute "hostname #{hostname}" do
   notifies :reload, "ohai[reload]"
 end
 
-hostsfile_entry "set localhost" do
-  ip_address "127.0.0.1"
-  hostname "localhost"
-  action :create
-end
-
 aliases = [ hostname ]
 ip_fqdns.each() do |ip_fqdn|
   f = ip_fqdn.to_s()
@@ -65,8 +59,6 @@ ip_fqdns.each() do |ip_fqdn|
     match = /^([^.]+)\..+$/.match(f)
     if match then
       aliases << match[1]
-    else
-      Chef::Log.debug("It (#{f}) didn't match!?!")
     end
   end
 end
@@ -76,6 +68,13 @@ hostsfile_entry "set hostnames" do
   hostname fqdn
   aliases aliases
   action :create
+  notifies :reload, "ohai[reload]"
+end
+
+hostsfile_entry "set localhost" do
+  ip_address "127.0.0.1"
+  hostname "localhost"
+  action :create_if_missing
   notifies :reload, "ohai[reload]"
 end
 
