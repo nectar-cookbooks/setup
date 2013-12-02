@@ -6,13 +6,16 @@ This cookbook contains some recipes for QCloud specific configuration.
 Recipe - "setup"
 ================
 
-The "qcloud::setup" recipe does some simple configuration that typically needs to be done for a new NeCTAR virtual; e.g. setting the timezone.
+The "qcloud::setup" recipe does some simple configuration that typically needs to be done for a new NeCTAR virtual; e.g. setting the timezone, root mail aliases, hostnames, etc.
 
 Attributes:
 -----------
 
-* `node['qcloud']['tz']` - The required timezone; e.g. "Australia/Brisbane".
-* `node['qcloud']['set_fqdn']` - The required FQDN.  If "*", the virtual's hostname is determined by a reverse DNS lookup of the IP address.  On a NeCTAR node, that should give an address of the form "vm-<num>-<num>-<num>-<num>.<cell>.nectar.org.au"
+* `node['qcloud']['tz']` - The required timezone; e.g. "Australia/Brisbane".  If unset (or 'nil') the timezone is not altered.
+* `node['qcloud']['set_fqdn']` - The required FQDN.  If "*", the virtual's hostname is determined by a reverse DNS lookup of the IP address.  (On a NeCTAR node, that should give an address of the form "vm-<num>-<num>-<num>-<num>.<cell>.nectar.org.au".) If unset (or 'nil') the hostname is not altered.
+* `node['qcloud']['root_email']` - An array of email addresses that root email should be redirected to.  If unset (or 'nil') the root email alias is not altered.  If '[]' then the root mail alias (if any) is removed. 
+
+Note: some "funky things" happen when a NeCTAR node is provisioned which may leave your virtual in a state where DHCP says the hostname is the name of the NeCTAR project ... which doesn't resolve as a DNS name.
 
 Recipe - "mount_rdsi_collections"
 =================================
