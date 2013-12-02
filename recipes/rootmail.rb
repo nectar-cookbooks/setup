@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: qcloud
-# Recipe:: setup
+# Recipe:: rootmail
 #
 # Copyright (c) 2013, The University of Queensland
 # All rights reserved.
@@ -27,17 +27,26 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'ipaddr'
 
-if node['qcloud']['tz'] then
-  node.normal['tz'] = node['qcloud']['tz']
-  include_recipe 'timezone-ii::default'
+root_email = node['qcloud']['root-email'] || []
+
+bash "newaliases" do
+  command "/usr/bin/newaliases"
+  action :nothing
 end
 
-if node['qcloud']['set_fqdn'] then
-  include_recipe 'qcloud::set_hostname'
-end
-
-if node['qcloud']['root-email'] then
-  include_recipe 'qcloud::rootmail'
+ruby_block "update_root_alias" do
+  block do
+    file = Chef::Util::FileEdit.new('/etc/aliases')
+    if root_email.length > 0 then
+      root_alias = "root:\t\t#{root_email.join(', ')}"
+      file.search_file_replace_line(/^\s*root\s*:/, root_alias)
+      file.insert_line_if_no_match(/^\s*root\s*:/, root_alias)
+    else
+      file.search_file_delete_line(/^\s*root\s*:/)
+    end
+    file.write_file
+  end
+  only_if { File.exists?('/etc/aliases') }
+  notifies :run, "bash[newaliases]"
 end
