@@ -30,6 +30,7 @@
 require 'ipaddr'
 
 if node['qcloud']['tz'] then
+  node.normal['tz'] = node['qcloud']['tz']
   include_recipe 'timezone-ii::default'
 end
 
