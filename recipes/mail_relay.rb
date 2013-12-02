@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: qcloud
-# Recipe:: setup
+# Recipe:: mail_relay
 #
 # Copyright (c) 2013, The University of Queensland
 # All rights reserved.
@@ -27,25 +27,10 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'ipaddr'
 
-if node['qcloud']['tz'] then
-  node.normal['tz'] = node['qcloud']['tz']
-  include_recipe 'timezone-ii::default'
-end
+mail_relay = node['qcloud']['mail_relay']
 
-if node['qcloud']['set_fqdn'] then
-  include_recipe 'qcloud::set_hostname'
-end
-
-if node['qcloud']['root_email'] then
-  include_recipe 'qcloud::rootmail'
-end
-
-if node['qcloud']['logwatch'] then
-  include_recipe 'logwatch::default'
-end
-
-if node['qcloud']['mail_relay'] then
-  include_recipe 'logwatch::default'
+if mail_relay then
+  node.override['postfix']['relayhost'] = mail_relay
+  include_recipe 'postfix::default'
 end
