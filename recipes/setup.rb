@@ -38,6 +38,6 @@ if node['qcloud']['set_fqdn'] then
   include_recipe 'qcloud::set_hostname'
 end
 
-if node['qcloud']['root-email'] then
+if node['qcloud']['root_email'] then
   include_recipe 'qcloud::rootmail'
 end

@@ -28,7 +28,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-root_email = node['qcloud']['root-email'] || []
+root_email = node['qcloud']['root_email'] || []
 
 bash "newaliases" do
   command "/usr/bin/newaliases"
