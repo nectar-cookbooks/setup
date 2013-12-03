@@ -14,6 +14,7 @@ Attributes:
 * `node['qcloud']['tz']` - The required timezone; e.g. "Australia/Brisbane".  If unset (or 'nil') the timezone is not altered.
 * `node['qcloud']['set_fqdn']` - The required FQDN.  If "*", the virtual's hostname is determined by a reverse DNS lookup of the IP address.  (On a NeCTAR node, that should give an address of the form "vm-<num>-<num>-<num>-<num>.<cell>.nectar.org.au".) If unset (or 'nil') the hostname is not altered.
 * `node['qcloud']['root_email']` - An array of email addresses that root email should be redirected to.  If unset (or 'nil') the root email alias is not altered.  If '[]' then the root mail alias (if any) is removed.
+* `node['qcloud']['mail_relay'] - If set, configure the system to relay outgoing email via the the host given by the attribute.
 * `node['qcloud']['logwatch']` - If true, run the standard Opscode logwatch recipe.  Refer to https://github.com/opscode-cookbooks/logwatch for details of the attributes.
 
 Note: some "funky things" happen when a NeCTAR node is provisioned which may leave your virtual in a state where DHCP says the hostname is the name of the NeCTAR project ... which doesn't resolve as a DNS name.
@@ -54,6 +55,21 @@ The recipe is controlled by the following attributes.
 ```
 
 * `node['qcloud']['create_users']` - if true, the recipe will create local users and groups to match the uid/gid numbers you would expect to see on the collection.  Defaults to true.
+
+Recipe - mail_relay
+===================
+
+Configures the mail relay.  The current implementation is hard-wired to uses Postfix. See above for other details.
+
+Recipe - rootmail
+=================
+
+Add or remove a mail alias for the "root" mail address. See above for details.
+
+Recipe - set_hostname
+=====================
+
+Set the hostname to a specified FQDN.  See above for details.
 
 TO-DO LIST
 ==========
