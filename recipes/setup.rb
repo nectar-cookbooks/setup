@@ -47,5 +47,5 @@ if node['qcloud']['logwatch'] then
 end
 
 if node['qcloud']['mail_relay'] then
-  include_recipe 'logwatch::default'
+  include_recipe 'qcloud::mail_relay'
 end
