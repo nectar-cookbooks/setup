@@ -32,13 +32,20 @@ require 'resolv'
 ip = node['ipaddress']
 ip_fqdns = Resolv::DNS.new.getnames(ip)
 
-fqdn = node['qcloud']['set_fqdn'] || ip_fqdns[0]
+fqdn = node['qcloud']['set_fqdn']
 if fqdn == '*' then
-  fqdn = ip_fqdns[0]
+  if !ip_fqdns || ip_fqdns.empty?() then
+    raise 'Resolv::DNS cannot tell us what our hostnames are!?!'
+  end
+  fqdn = ip_fqdns[0].to_s()
 end
 
 /^([^.]+)/ =~ fqdn
 hostname = $1
+
+if !hostname || hostname == '' then
+  raise "The supplied or inferrred FQDN is invalid ('#{fqdn'})"
+end
 
 file '/etc/hostname' do
   content "#{hostname}\n"
