@@ -44,7 +44,7 @@ end
 hostname = $1
 
 if !hostname || hostname == '' then
-  raise "The supplied or inferrred FQDN is invalid ('#{fqdn'})"
+  raise "The supplied or inferrred FQDN is invalid (#{fqdn})"
 end
 
 file '/etc/hostname' do
