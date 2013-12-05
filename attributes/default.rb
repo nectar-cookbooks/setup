@@ -7,3 +7,4 @@ node.default['qcloud']['tz'] = nil
 node.default['qcloud']['set_fqdn'] = nil
 node.default['qcloud']['root_email'] = nil
 node.default['qcloud']['mail_relay'] = nil
+node.default['qcloud']['apply_security_patches'] = true

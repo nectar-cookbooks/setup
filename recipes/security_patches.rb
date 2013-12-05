@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: qcloud
-# Recipe:: setup
+# Recipe:: security_patches
 #
 # Copyright (c) 2013, The University of Queensland
 # All rights reserved.
@@ -27,29 +27,41 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'ipaddr'
-
-if node['qcloud']['tz'] then
-  node.normal['tz'] = node['qcloud']['tz']
-  include_recipe 'timezone-ii::default'
-end
-
-if node['qcloud']['set_fqdn'] then
-  include_recipe 'qcloud::set_hostname'
-end
-
-if node['qcloud']['root_email'] then
-  include_recipe 'qcloud::rootmail'
-end
-
-if node['qcloud']['logwatch'] then
-  include_recipe 'logwatch::default'
-end
-
-if node['qcloud']['mail_relay'] then
-  include_recipe 'qcloud::mail_relay'
-end
-
-if node['qcloud']['apply_security_patches'] then
-  include_recipe 'qcloud::security_patches'
+case node['platform_family'] 
+when 'debian'
+  package 'unattended-upgrades' do
+    action :install
+  end
+  package 'mailutils' do
+    action :install
+  end
+  cookbook_file '/etc/apt/apt.conf.d/20auto-upgrades' do
+    source 'apt-20auto-upgrades'
+    mode 0644
+  end
+  ruby-block 'yum-cron-configure' do
+    block do
+      u = 'Unattended-Upgrade::'
+      file = Chef::Util::FileEdit.new('/etc/yum/yum-cron.conf')
+      file.search_file_replace_line(/::MinimalSteps/, 
+                                    u + 'MinimalSteps "true";')
+      file.search_file_replace_line(/::Mail/, 
+                                    u + 'Mail "root";')
+      file.search_file_replace_line(/::Automatic-Reboot/, 
+                                    u + 'Automatic-Reboot "true";')
+      file.write_file
+    end
+  end
+when 'fedora'
+  package 'yum-cron' do
+    action :install
+  end
+  ruby-block 'yum-cron-configure' do
+    block do
+      file = Chef::Util::FileEdit.new('/etc/yum/yum-cron.conf')
+      file.search_file_replace_line(/^update_cmd =/, 'update = security')
+      file.search_file_replace_line(/^emit_via =/, 'emit_via = email')
+      file.write_file
+    end
+  end
 end
