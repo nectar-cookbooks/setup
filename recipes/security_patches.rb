@@ -27,6 +27,11 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+target = node['qcloud']['apply_patches'] || 'none'
+if target == 'none' || target == '' then
+  return
+end
+
 case node['platform_family'] 
 when 'debian'
   package 'unattended-upgrades' do
@@ -59,10 +64,40 @@ when 'fedora'
   end
   ruby_block 'yum-cron-configure' do
     block do
+      if target == 'all' then
+        cmd = 'default'
+      else
+        cmd = target
+      end
       file = Chef::Util::FileEdit.new('/etc/yum/yum-cron.conf')
-      file.search_file_replace_line(/^update_cmd =/, 'update = security')
+      file.search_file_replace_line(/^update_cmd =/, 
+                                    "update_cmd = #{cmd}")
       file.search_file_replace_line(/^emit_via =/, 'emit_via = email')
       file.write_file
     end
   end
+when 'rhel'
+  if target != 'all' then
+    # Technically, it is possible to do security on some variants, but
+    # it depends on the provider's insfrastructure and / or whether you
+    # have an RHN subscription.
+    raise "Selective auto-patching is not supported on RHEL-based distros"
+  end
+  # I'm not sure if this will work for older distros ...
+  package 'yum-cron' do
+    action :install
+  end
+  ruby_block 'yum-cron-configure' do
+    block do
+      file = Chef::Util::FileEdit.new('/etc/sysconfig/yum-cron')
+      file.search_file_replace_line(/^update_cmd =/, 'update = security')
+      file.search_file_replace_line(/^MAILTO=/, 'MAILTO=root')
+      file.search_file_replace_line(/^CHECK_ONLY=/, 'CHECK_ONLY=no')
+      file.search_file_replace_line(/^DOWNLOAD_ONLY=/, 'DOWNLOAD_ONLY=no')
+      file.write_file
+    end
+  end
+  service 'yum-cron' do
+    action :enable
+  done
 end
