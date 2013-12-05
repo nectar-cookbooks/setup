@@ -31,7 +31,7 @@
 root_email = node['qcloud']['root_email'] || []
 if root_email.is_a? String then
   root_email = [ root_email ]
-then
+end
 
 bash "newaliases" do
   command "/usr/bin/newaliases"
