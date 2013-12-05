@@ -56,7 +56,7 @@ when 'fedora'
   package 'yum-cron' do
     action :install
   end
-  ruby-block 'yum-cron-configure' do
+  ruby_block 'yum-cron-configure' do
     block do
       file = Chef::Util::FileEdit.new('/etc/yum/yum-cron.conf')
       file.search_file_replace_line(/^update_cmd =/, 'update = security')
