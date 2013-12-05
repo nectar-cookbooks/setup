@@ -39,7 +39,7 @@ when 'debian'
     source 'apt-20auto-upgrades'
     mode 0644
   end
-  ruby-block 'yum-cron-configure' do
+  ruby_block 'yum-cron-configure' do
     block do
       u = 'Unattended-Upgrade::'
       file = Chef::Util::FileEdit.new('/etc/yum/yum-cron.conf')

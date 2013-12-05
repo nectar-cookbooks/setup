@@ -1,0 +1,4 @@
+// Created by Chef recipe (qcloud::setup) - do not edit.
+
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
