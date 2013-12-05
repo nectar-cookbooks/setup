@@ -1,7 +1,11 @@
 Overview
 ========
 
-This cookbook contains some recipes for QCloud specific configuration.
+This cookbook contains some recipes for basic configuration of NeCTAR virtuals
+
+The "setup" recipe and its child recipes have been tested on virtuals running NeCTAR CentOS 6.4 and Ubuntu 13.04 images.  There is an expectation that they will also work on other recent RHEL / CentOS / Scientific Linux and Ubuntu / Debian distros.
+
+The "mount_rdsi_collections" recipe is QCloud / QRISCloud specific.  I don't have details about how RDSI Collection mounts would be implemented on other Nodes.
 
 Recipe - "setup"
 ================
