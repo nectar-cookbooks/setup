@@ -42,7 +42,8 @@ when 'debian'
   ruby_block 'yum-cron-configure' do
     block do
       u = 'Unattended-Upgrade::'
-      file = Chef::Util::FileEdit.new('/etc/yum/yum-cron.conf')
+      file = Chef::Util::FileEdit.new('/etc/apt/apt.conf.d/' +
+                                      '50unattended-upgrades')
       file.search_file_replace_line(/::MinimalSteps/, 
                                     u + 'MinimalSteps "true";')
       file.search_file_replace_line(/::Mail/, 
