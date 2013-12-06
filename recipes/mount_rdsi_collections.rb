@@ -47,12 +47,14 @@ node['qcloud']['store_ids'].each() do |store_id|
     raise "Invalid store id (#{store_id}) : expected Qnn or Qnnnn"
   end
   num = /Q([0-9]+)/.match(store_id)[1].to_i()
+  # There is an inconsistency in the way that early IDs were created ... 
+  anomalous = num >= 1 && num <= 5 || num == 16
   if num <= 0 then
     raise "Invalid store id (#{store_id}) : there is no store zero"
-  elsif num <= 5 and ! /Q[0-9][0-9]/.match(store_id) then
-    raise "Invalid store id (#{store_id}) : stores 1 through 5 have form Qnn"
-  elsif num > 5 and ! /Q[0-9][0-9][0-9][0-9]/.match(store_id) then
-    raise "Invalid store id (#{store_id}) : stores > 5 have form Qnnnn"
+  elsif anomalous && ! /Q[0-9][0-9]/.match(store_id) then
+    raise "Invalid store id (#{store_id}) : stores 1..5 and 16 have form Qnn"
+  elsif ! anomalous && ! /Q[0-9][0-9][0-9][0-9]/.match(store_id) then
+    raise "Invalid store id (#{store_id}) : store ids normally have form Qnnnn"
   end
 end
 
