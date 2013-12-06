@@ -20,7 +20,7 @@ Attributes:
 * `node['qcloud']['root_email']` - An array of email addresses that root email should be redirected to.  If unset (or 'nil') the root email alias is not altered.  If '[]' then the root mail alias (if any) is removed.
 * `node['qcloud']['mail_relay'] - If set, configure the system to relay outgoing email via the the host given by the attribute.
 * `node['qcloud']['logwatch']` - If true, run the standard Opscode logwatch recipe.  Refer to https://github.com/opscode-cookbooks/logwatch for details of the attributes.
-* `node['qcloud']['apply_patches']` - This determines whether / how we configure auto-patching.  If the value is "all" then security and bugfix patches are applied.  If the value is "security" then all security patches are applied.  If the value is "none" or "", then no patches are applied automatically.  The default is "all".  
+* `node['qcloud']['apply_patches']` - This determines whether / how we configure auto-patching.  The standard values are "all", "security" and "none".  The default is "all".  (See the "autopatching" documentation below.)
 
 Note: some "funky things" happen when a NeCTAR node is provisioned which may leave your virtual in a state where DHCP says the hostname is the name of the NeCTAR project ... which doesn't resolve as a DNS name.
 
@@ -75,6 +75,42 @@ Recipe - set_hostname
 =====================
 
 Set the hostname to a specified FQDN.  See above for details.
+
+Recipe - autopatching
+=====================
+
+This recipe configures automatic patching, depending on the platform.
+
+Attributes:
+----------
+
+* `node['qcloud']['apply_patches']` - This determines whether / how we configure auto-patching.  The standard values are "all", "security" and "none".  The default is "all".  
+
+Behaviour:
+---------
+
+For Ubuntu / Debian, we install and configure the "unattended-upgrades" 
+package.  The "apply_patches" value is interpretted as follows:
+  * `security` means use the distro's "security" origin
+  * `all` means use the distro's "security" origin AND the "updates" and / or 
+    "stable" origins.
+Note that we only enable / disable recognized origins that are already in the 
+`50unattended-updates` provided by the package (or the user).
+
+For RHEL-based distros, we install and configure "yum-cron".  Only the "all"
+option is supported at this time.  (Handling security-only updates on SL and
+CentOS is tricky because of infrastructure issues.)
+
+For Fedora distros, we install and configure "yum-cron".  This uses a more 
+recent version of "yum-cron" than on RHEL 6.x.  
+  * `all` means the "yum upgrade"
+  * `security` means "yum --security upgrade"
+  * other values are available as documented in the "yum-cron.conf" file.
+
+In all cases, we configure the updating to send email to root.  Where 
+possible we configure auto-rebooting when needed.
+
+The timing and frequency of auto-updating is distro specific.
 
 TO-DO LIST
 ==========
