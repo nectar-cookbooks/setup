@@ -70,7 +70,7 @@ when 'debian'
       # we manage them by toggling the "comment" on relevant lines in
       # the existing files Allowed-Origins list.
       if ! origins.empty? then
-        sig = "\\$\\{distro_id}|Ubuntu"
+        sig = "(\\$\\{distro_id}|Ubuntu)"
         origins.each() do |o|
           # Uncomment line
           pat = "^(//)?(\\s*\"#{sig}.*#{o}\")"
