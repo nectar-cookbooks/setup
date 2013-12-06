@@ -99,5 +99,5 @@ when 'rhel'
   end
   service 'yum-cron' do
     action :enable
-  done
+  end
 end
