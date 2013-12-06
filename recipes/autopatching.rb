@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: qcloud
-# Recipe:: security_patches
+# Recipe:: autopatching
 #
 # Copyright (c) 2013, The University of Queensland
 # All rights reserved.

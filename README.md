@@ -20,6 +20,7 @@ Attributes:
 * `node['qcloud']['root_email']` - An array of email addresses that root email should be redirected to.  If unset (or 'nil') the root email alias is not altered.  If '[]' then the root mail alias (if any) is removed.
 * `node['qcloud']['mail_relay'] - If set, configure the system to relay outgoing email via the the host given by the attribute.
 * `node['qcloud']['logwatch']` - If true, run the standard Opscode logwatch recipe.  Refer to https://github.com/opscode-cookbooks/logwatch for details of the attributes.
+* `node['qcloud']['apply_patches']` - This determines whether / how we configure auto-patching.  If the value is "all" then security and bugfix patches are applied.  If the value is "security" then all security patches are applied.  If the value is "none" or "", then no patches are applied automatically.  The default is "all".  
 
 Note: some "funky things" happen when a NeCTAR node is provisioned which may leave your virtual in a state where DHCP says the hostname is the name of the NeCTAR project ... which doesn't resolve as a DNS name.
 
