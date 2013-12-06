@@ -77,7 +77,7 @@ when 'debian'
                                    '$2')
         end
         all_origins.each() do |o|
-          if ! origins.contains?(o) then
+          if origins.index(o) == nil then
             # Comment out line
             file.search_file_replace("^(//)?(\\s*\"#{sig}.*#{o}\")", 
                                      '//$2')
