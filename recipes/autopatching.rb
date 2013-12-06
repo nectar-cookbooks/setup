@@ -74,7 +74,7 @@ when 'debian'
         origins.each() do |o|
           # Uncomment line
           pat = "^(//)?(\\s*\"#{sig}.*#{o}\")"
-          Chef::log.debug("pattern is '#{pat}'")
+          Chef::Log.debug("pattern is '#{pat}'")
           file.search_file_replace(pat, '\2')
         end
         all_origins.each() do |o|
