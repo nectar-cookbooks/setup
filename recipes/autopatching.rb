@@ -73,15 +73,12 @@ when 'debian'
         sig = "(\\$\\{distro_id}|Ubuntu)"
         origins.each() do |o|
           # Uncomment line
-          pat = "^(//)?(\\s*\"#{sig}.*#{o}\")"
-          Chef::Log.debug("pattern is '#{pat}'")
-          file.search_file_replace(pat, '\2')
+          file.search_file_replace("^(//)?(\\s*\"#{sig}.*#{o}\")", '\2')
         end
         all_origins.each() do |o|
           if origins.index(o) == nil then
             # Comment out line
-            file.search_file_replace("^(//)?(\\s*\"#{sig}.*#{o}\")", 
-                                     '//\2')
+            file.search_file_replace("^(//)?(\\s*\"#{sig}.*#{o}\")", '//\2')
           end
         end
       end
