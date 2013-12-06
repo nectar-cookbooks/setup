@@ -47,13 +47,14 @@ when 'debian'
   ruby_block 'yum-cron-configure' do
     block do
       u = 'Unattended-Upgrade::'
+      p = '^(//)?' + u
       file = Chef::Util::FileEdit.new('/etc/apt/apt.conf.d/' +
                                       '50unattended-upgrades')
-      file.search_file_replace_line(/::MinimalSteps/, 
+      file.search_file_replace_line(p + 'MinimalSteps ', 
                                     u + 'MinimalSteps "true";')
-      file.search_file_replace_line(/::Mail/, 
+      file.search_file_replace_line(p + 'Mail ', 
                                     u + 'Mail "root";')
-      file.search_file_replace_line(/::Automatic-Reboot/, 
+      file.search_file_replace_line(p + 'Automatic-Reboot ', 
                                     u + 'Automatic-Reboot "true";')
       file.write_file
     end
