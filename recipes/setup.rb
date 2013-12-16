@@ -62,3 +62,6 @@ end
 if node['qcloud']['antivirus'] then
   include_recipe 'qcloud::clamav'
 end
+
+include_recipe 'locale'
+
