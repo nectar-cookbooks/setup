@@ -10,7 +10,15 @@ The "mount_rdsi_collections" recipe is QCloud / QRISCloud specific.  I don't hav
 Recipe - "setup"
 ================
 
-The "qcloud::setup" recipe does some simple configuration that typically needs to be done for a new NeCTAR virtual; e.g. setting the timezone, root mail aliases, hostnames, etc.
+The "qcloud::setup" recipe does some simple configuration that typically needs to be done for a new NeCTAR virtual:
+
+* setting the hostname and creating /etc/hosts entries
+* setting the timezone and locale,
+* configuring a root mail aliases and relaying,
+* configuring automatic patching
+* configuring logfile scanning
+* configuring anti-virus
+
 
 Attributes:
 -----------
@@ -60,6 +68,14 @@ The recipe is controlled by the following attributes.
 ```
 
 * `node['qcloud']['create_users']` - if true, the recipe will create local users and groups to match the uid/gid numbers you would expect to see on the collection.  Defaults to true.
+
+Recipe - logwatch
+=================
+
+Configures monitoring of system logs using the logwatch utility.  This is a
+thin wrapper for the Chef Community "logwatch" recipe, but with different 
+defaults for some attributes.  In particular, `node['logwatch']['detail']`
+is set to "low" by default so that only important stuff will be reported.
 
 Recipe - mail_relay
 ===================

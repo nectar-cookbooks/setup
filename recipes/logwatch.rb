@@ -27,36 +27,9 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'ipaddr'
-
-if node['qcloud']['tz'] then
-  node.normal['tz'] = node['qcloud']['tz']
-  include_recipe 'timezone-ii::default'
+# Workaround for a change in logwatch between 7.3.6 and 7.4.0 
+# which makes the logwatch recipe's default 'output' attribute invalid.
+if platform_family?("rhel")
+  node.override['logwatch']['output'] = 'unformatted'
 end
-
-if node['qcloud']['set_fqdn'] then
-  include_recipe 'qcloud::set_hostname'
-end
-
-include_recipe 'locale'
-
-if node['qcloud']['root_email'] then
-  include_recipe 'qcloud::rootmail'
-end
-
-if node['qcloud']['logwatch'] then
-  include_recipe 'qcloud::logwatch'
-end
-
-if node['qcloud']['mail_relay'] then
-  include_recipe 'qcloud::mail_relay'
-end
-
-if node['qcloud']['apply_patches'] then
-  include_recipe 'qcloud::autopatching'
-end
-
-if node['qcloud']['antivirus'] then
-  include_recipe 'qcloud::clamav'
-end
-
+include_recipe 'logwatch'
