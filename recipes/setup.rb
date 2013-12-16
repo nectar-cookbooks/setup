@@ -43,6 +43,11 @@ if node['qcloud']['root_email'] then
 end
 
 if node['qcloud']['logwatch'] then
+  # Temporary workaround for a change in logwatch between 7.3.6 and 7.4.0 
+  # which makes the logwatch recipe's default 'output' attribute invalid.
+  if platform_family?("rhel")
+    node.override['logwatch']['output'] = 'unformatted'
+  end
   include_recipe 'logwatch::default'
 end
 
