@@ -27,7 +27,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-node.default['clamav']['clamd']['enabled'] = false
+node.default['clamav']['clamd']['enabled'] = true
 node.default['clamav']['freshclam']['enabled'] = false
 
 include_recipe "clamav"
