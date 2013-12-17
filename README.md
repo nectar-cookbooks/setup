@@ -72,10 +72,7 @@ The recipe is controlled by the following attributes.
 Recipe - logwatch
 =================
 
-Configures monitoring of system logs using the logwatch utility.  This is a
-thin wrapper for the Chef Community "logwatch" recipe, but with different 
-defaults for some attributes.  In particular, `node['logwatch']['detail']`
-is set to "low" by default so that only important stuff will be reported.
+Configures monitoring of system logs using the logwatch utility.  This is based on the Chef Community "logwatch" recipe.
 
 Recipe - mail_relay
 ===================

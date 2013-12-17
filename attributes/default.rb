@@ -10,4 +10,3 @@ node.default['qcloud']['mail_relay'] = nil
 node.default['qcloud']['apply_patches'] = 'all'
 node.default['qcloud']['antivirus'] = false
 
-node.normal['logwatch']['detail'] = 'low'
