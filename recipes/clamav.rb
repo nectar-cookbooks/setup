@@ -31,7 +31,8 @@ include_recipe "clamav"
 
 clamav = node['qcloud']['clamav'] || {}
 
-scans = clamav['scans'] || {'/' => {'action' => 'notify'}}
+scans = clamav['scans'] || {'/' => {'action' => 'notify',
+                                    'exclude_dir' => '^/sys|^/proc|^/dev' }}
 schedule = clamav['schedule'] || ['10', '2', '*', '*', '*']
 if !schedule.kind_of?(Array) || schedule.length != 5 
   raise 'Cron schedule must be an array with 5 components'
@@ -60,7 +61,9 @@ scans.each() do |dir, attrs|
   else
     raise "Unrecognized action '#{action}'"
   end
-  
+  if attrs['exclude_dir'] 
+    args = "#{args} --exclude-dir=#{attrs['exclude_dir']}"
+  end
   commands << "clamscan --quiet -r #{common_args} #{args} #{dir}"
 end
 

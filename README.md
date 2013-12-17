@@ -29,6 +29,7 @@ Attributes:
 * `node['qcloud']['mail_relay'] - If set, configure the system to relay outgoing email via the the host given by the attribute.
 * `node['qcloud']['logwatch']` - If true, run the standard Opscode logwatch recipe.  Refer to https://github.com/opscode-cookbooks/logwatch for details of the attributes.
 * `node['qcloud']['apply_patches']` - This determines whether / how we configure auto-patching.  The standard values are "all", "security" and "none".  The default is "all".  (See the "autopatching" documentation below.)
+* `node['qcloud']['antivirus']` - This determines whether or not we configure ClamAV for virus checking.  If the attribute is truthy, "clamav" recipe (described below) is run.  The default is false.
 
 Note: some "funky things" happen when a NeCTAR node is provisioned which may leave your virtual in a state where DHCP says the hostname is the name of the NeCTAR project ... which doesn't resolve as a DNS name.
 
@@ -88,6 +89,26 @@ Recipe - set_hostname
 =====================
 
 Set the hostname to a specified FQDN.  See above for details.
+
+Recipe - clamav
+===============
+
+Configure the clamav daemon and freshclam to download AV updates.  Then 
+create a cron job to perform file system scans.
+
+Attributes
+----------
+
+The details of the installation and configuration of clamav and freshclam 
+are controlled by attributes defined by the standard "clamav" recipe; see
+ 
+    https://github.com/RoboticCheese/clamav/blob/master/README.md
+
+The following attributes defined by this recipe:
+
+* `node['qcloud']['clamav']['scans']` - This gives a hash that describes the clamscan runs; see below.  (The default is `{'/' => {'action' => 'notify'}}` which says to scan starting from the root directory, and (just) report infected files.
+* `node['qcloud']['clamav']['schedule']` - This says when the scanning job should be started.  The value should be an array of 5 strings corresponfing to the first 5 fields of a crontab spec.  (The default is `['10', '2', '*', '*', '*']` which says to start the job at 2:10am every day.)
+* `node['qcloud']['clamav']['args']` - This gives additional arguments to be passed to the `clamscan` command.
 
 Recipe - autopatching
 =====================
