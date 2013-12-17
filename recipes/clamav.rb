@@ -28,6 +28,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 node.default['clamav']['clamd']['enabled'] = true
-node.default['clamav']['freshclam']['enabled'] = false
+node.default['clamav']['freshclam']['enabled'] = true
 
 include_recipe "clamav"
