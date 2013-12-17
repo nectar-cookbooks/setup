@@ -27,7 +27,52 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-node.default['clamav']['clamd']['enabled'] = true
-node.default['clamav']['freshclam']['enabled'] = true
-
 include_recipe "clamav"
+
+scans = node['qcloud']['clamav']['scans'] || {'dir' => '/', 'action' => notify}
+schedule = node['qcloud']['clamav']['schedule'] || ['10', '2', '*', '*', '*']
+if !schedule.kind_of?(Array) || schedule.length != 5 
+  raise 'Cron schedule must be an array with 5 components'
+end
+common_args = node['qcloud']['clamav']['args'] || ''
+commands = []
+
+scans.each() do |key, value|
+  attrs = value.to_hash()
+  action = attrs['action'] || 'notify'
+  dir = attrs['dir'] || '/'
+
+  case action 
+  when 'notify'
+    args = '-i'
+  when 'move'
+    move_to = attrs['move_to']
+    if ! move_to || move_to == ' ' then
+      raise "The 'move' action requires a move_to attribute"
+    end
+    directory move_to do
+      owner 'root'
+      mode 0700
+    end
+    args = "--move=#{move_to}"
+  when 'remove'
+    args = "--remove"
+  else
+    raise "Unrecognized action '#{action}'"
+  end
+  
+  commands << "clamscan --quiet -r #{common_args} #{args} #{dir}"
+end
+
+if ! commands.empty? 
+  cron 'clamav scanning' do
+    minute schedule[0]
+    hour schedule[1]
+    day schedule[2]
+    month schedule[3]
+    weekday schedule[4]
+    mailto 'root'
+    command commands.join("; ")
+  end
+end
+
