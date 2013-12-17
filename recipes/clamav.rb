@@ -31,7 +31,7 @@ include_recipe "clamav"
 
 clamav = node['qcloud']['clamav'] || {}
 
-scans = clamav['scans'] || [ {'dir' => '/', 'action' => 'notify'} ]
+scans = clamav['scans'] || {'/' => {'action' => 'notify'}} ]
 schedule = clamav['schedule'] || ['10', '2', '*', '*', '*']
 if !schedule.kind_of?(Array) || schedule.length != 5 
   raise 'Cron schedule must be an array with 5 components'
@@ -39,10 +39,8 @@ end
 common_args = clamav['args'] || ''
 commands = []
 
-scans.each() do |key, value|
-  attrs = value.to_hash()
+scans.each() do |dir, attrs|
   action = attrs['action'] || 'notify'
-  dir = attrs['dir'] || '/'
 
   case action 
   when 'notify'
