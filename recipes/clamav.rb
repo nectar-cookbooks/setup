@@ -44,16 +44,16 @@ scans.each() do |dir, attrs|
   case action 
   when 'notify'
     args = '-i'
-  when 'move'
-    move_to = attrs['move_to']
-    if ! move_to || move_to == ' ' then
-      raise "The 'move' action requires a move_to attribute"
+  when 'move', 'copy'
+    to_dir = attrs['to_dir']
+    if ! to_dir || to_dir == ' ' then
+      raise "The 'move' and 'copy' actions requires a 'to_dir' attribute"
     end
-    directory move_to do
+    directory to_dit do
       owner 'root'
       mode 0700
     end
-    args = "--move=#{move_to}"
+    args = "--#{action}=#{to_dir}"
   when 'remove'
     args = "--remove"
   else

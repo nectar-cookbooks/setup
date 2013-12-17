@@ -17,8 +17,7 @@ The "qcloud::setup" recipe does some simple configuration that typically needs t
 * configuring a root mail aliases and relaying,
 * configuring automatic patching
 * configuring logfile scanning
-* configuring anti-virus
-
+* configuring anti-virus software and scanning
 
 Attributes:
 -----------
@@ -106,9 +105,15 @@ are controlled by attributes defined by the standard "clamav" recipe; see
 
 The following attributes defined by this recipe:
 
-* `node['qcloud']['clamav']['scans']` - This gives a hash that describes the clamscan runs; see below.  (The default is `{'/' => {'action' => 'notify'}}` which says to scan starting from the root directory, and (just) report infected files.
+* `node['qcloud']['clamav']['scans']` - This gives a hash that describes the clamscan runs; see below.  (The default is `{'/' => {'action' => 'notify', 'exclude_dir' => '^/sys|^/dev|^/proc'}}` which says to scan starting from the root directory, exclude certain directories, and (just) report infected files.
 * `node['qcloud']['clamav']['schedule']` - This says when the scanning job should be started.  The value should be an array of 5 strings corresponfing to the first 5 fields of a crontab spec.  (The default is `['10', '2', '*', '*', '*']` which says to start the job at 2:10am every day.)
-* `node['qcloud']['clamav']['args']` - This gives additional arguments to be passed to the `clamscan` command.
+* `node['qcloud']['clamav']['args']` - This gives additional arguments to be passed to the `clamscan` command.  (The default is `'--quiet -r'`.)
+
+The 'scans' hash maps from a directory name, to sub-hash containing attributes for scanning that directory.  The following entries in the sub-hash are currently recognized:
+
+* `'action'` says what to do when a virus is encountered.  The possible values are `'notify'`, `'copy'`, `'move'` and `'remove'`.
+* `'to_dir'` gives the name of a directory to which infected files are to be moved or copied.
+* `'exclude_dir'` gives a regex for directory subtrees to be excluded from scanning.
 
 Recipe - autopatching
 =====================
