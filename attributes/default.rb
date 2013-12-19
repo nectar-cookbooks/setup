@@ -18,3 +18,6 @@ node.default['qcloud']['clamscan']['scans'] =
   }
 }
 node.default['qcloud']['clamscan']['schedule'] = ['10', '2', '*', '*', '*']
+
+node.normal["clamav"]["clamd"]["enabled"] = true
+node.normal["clamav"]["freshclam"]["enabled"] = true
