@@ -38,14 +38,15 @@ package 'python-novaclient' do
   action :install
 end
 
-tenants = node['qcloud']['openstack_tenants']
+os_tenant_name = node['qcloud']['openstack_tenant_name']
+os_tenant_id = node['qcloud']['openstack_tenant_id']
 
-if tenants then
-  os_auth_url = node['qcloud']['openstack_auth_url'] ||
-    'https://keystone.rc.nectar.org.au:5000/v2.0/'
-  os_username = node['qcloud']['openstack_username']
-  os_password = node['qcloud']['openstack_password']
-  os_tenant_name = node['qcloud']['openstack_tenant_name']
+os_auth_url = node['qcloud']['openstack_auth_url'] ||
+  'https://keystone.rc.nectar.org.au:5000/v2.0/'
+os_username = node['qcloud']['openstack_username']
+os_password = node['qcloud']['openstack_password']
+
+if os_tenant_name then
   template "/etc/openstack/#{os_tenant_name}" do
     owner 'root'
     mode  0600
