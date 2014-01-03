@@ -38,6 +38,10 @@ package 'python-novaclient' do
   action :install
 end
 
+package 'python-keystoneclient' do
+  action :install
+end
+
 os_tenant_name = node['qcloud']['openstack_tenant_name']
 os_tenant_id = node['qcloud']['openstack_tenant_id']
 
