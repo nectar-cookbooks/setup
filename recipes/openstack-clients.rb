@@ -47,6 +47,10 @@ os_username = node['qcloud']['openstack_username']
 os_password = node['qcloud']['openstack_password']
 
 if os_tenant_name then
+  directory "/etc/openstack" do
+    owner 'root'
+    mode  0755
+  end
   template "/etc/openstack/#{os_tenant_name}" do
     owner 'root'
     mode  0600
