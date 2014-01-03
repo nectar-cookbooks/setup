@@ -51,7 +51,7 @@ if os_tenant_name then
     owner 'root'
     mode  0755
   end
-  template "/etc/openstack/#{os_tenant_name}" do
+  template "/etc/openstack/#{os_tenant_name}_rc.sh" do
     owner 'root'
     mode  0600
     source 'openrc-sh.erb'
@@ -59,8 +59,8 @@ if os_tenant_name then
                 :os_auth_url => os_auth_url,
                 :os_username => os_username,
                 :os_password => os_password,
-                :os_tenant_id => os_tenant_name,
-                :os_tenant_name => os_tenant_id
+                :os_tenant_name => os_tenant_name,
+                :os_tenant_id => os_tenant_id
               })
   end
 end
