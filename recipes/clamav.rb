@@ -2,7 +2,7 @@
 # Cookbook Name:: qcloud
 # Recipe:: clamav
 #
-# Copyright (c) 2013, The University of Queensland
+# Copyright (c) 2013, 2014, The University of Queensland
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -46,10 +46,10 @@ scans.each() do |dir, attrs|
     args = '-i'
   when 'move', 'copy'
     to_dir = attrs['to_dir']
-    if ! to_dir || to_dir == ' ' then
-      raise "The 'move' and 'copy' actions requires a 'to_dir' attribute"
+    if ! to_dir || to_dir == '' then
+      raise "The 'move' and 'copy' actions require a 'to_dir' attribute"
     end
-    directory to_dit do
+    directory to_dir do
       owner 'root'
       mode 0700
     end
