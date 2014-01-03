@@ -18,6 +18,7 @@ The "qcloud::setup" recipe does some simple configuration that typically needs t
 * configuring automatic patching
 * configuring logfile scanning
 * configuring anti-virus software and scanning
+* install OpenStack clients and configure credentials
 
 Attributes:
 -----------
@@ -29,6 +30,7 @@ Attributes:
 * `node['qcloud']['logwatch']` - If true, run the standard Opscode logwatch recipe.  Refer to https://github.com/opscode-cookbooks/logwatch for details of the attributes.
 * `node['qcloud']['apply_patches']` - This determines whether / how we configure auto-patching.  The standard values are "all", "security" and "none".  The default is "all".  (See the "autopatching" documentation below.)
 * `node['qcloud']['antivirus']` - This determines whether or not we configure ClamAV for virus checking.  If the attribute is truthy, "clamav" recipe (described below) is run.  The default is false.
+* `node['qcloud']['openstack_clients']` - This determines whether or not we install OpenStack clients and credentials.  The default is false.
 
 Note: some "funky things" happen when a NeCTAR node is provisioned which may leave your virtual in a state where DHCP says the hostname is the name of the NeCTAR project ... which doesn't resolve as a DNS name.
 
@@ -151,8 +153,34 @@ possible we configure auto-rebooting when needed.
 
 The timing and frequency of auto-updating is distro specific.
 
+Recipe - openstack_clients
+==========================
+
+This recipe installs some commonly used OpenStack clients, and optionally
+configures an RC file containing credentials for this system's NeCTAR
+tenancy.  Currently, we install "nova", "swift" and "keystone".
+
+The intention is to install and configure clients appropriate for the 
+current NeCTAR platform.
+
+Attributes
+----------
+
+* `node['qcloud']['openstack_tenant_name']` - The name of the tenancy.
+* `node['qcloud']['openstack_tenant_id']` - The id for the tenancy.
+* `node['qcloud']['openstack_auth_url']` - The URL to use for authenticating. Defaults to "https://keystone.rc.nectar.org.au:5000/v2.0/".
+* `node['qcloud']['openstack_username']` - The NeCTAR username for authenticating.
+* `node['qcloud']['openstack_password']` - The OpenStack password for authenticating.
+* `node['qcloud']['openstack_rc_path']` - Pathname for the credentials script.  Defaults to "/etc/openstack/authrc.sh".
+
+If the 'openstack_tenant_name' attribute is defined and non-empty, then a 
+credentials file will be generated containing the details.
+
+
 TO-DO LIST
 ==========
 
 * Turn clunky recipes into clunky resources
-
+* Support EC2 authentication in the openstack_clients recipe.
+* Support multiple tenants for the usecase where you are installing openstack
+  clients on desktop / laptop PC.

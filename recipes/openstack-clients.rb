@@ -44,18 +44,20 @@ end
 
 os_tenant_name = node['qcloud']['openstack_tenant_name']
 os_tenant_id = node['qcloud']['openstack_tenant_id']
-
-os_auth_url = node['qcloud']['openstack_auth_url'] ||
-  'https://keystone.rc.nectar.org.au:5000/v2.0/'
+os_auth_url = node['qcloud']['openstack_auth_url']
 os_username = node['qcloud']['openstack_username']
 os_password = node['qcloud']['openstack_password']
+os_rc_path = node['qcloud']['openstack_rc_path']
 
 if os_tenant_name then
-  directory "/etc/openstack" do
-    owner 'root'
-    mode  0755
+  # If we are use the default rc path, automatically create the parent dir 
+  if (Pathname.new(os_rc_path).dirname == '/etc/openstack') then
+    directory '/etc/openstack' do
+      owner 'root'
+      mode  0755
+    end
   end
-  template "/etc/openstack/#{os_tenant_name}_rc.sh" do
+  template os_rc_path do
     owner 'root'
     mode  0600
     source 'openrc-sh.erb'
@@ -68,4 +70,4 @@ if os_tenant_name then
               })
   end
 end
-  
+
