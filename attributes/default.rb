@@ -27,4 +27,4 @@ node.default['qcloud']['openstack_rc_path'] = '/etc/openstack/authrc.sh'
 node.default['qcloud']['openstack_auth_url'] =
   'https://keystone.rc.nectar.org.au:5000/v2.0/'
 
-node.normal['chef-server']['version'] = '11.8.0'
+node.normal['chef-server']['version'] = 'latest'
