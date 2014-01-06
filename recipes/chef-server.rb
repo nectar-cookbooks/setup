@@ -79,5 +79,3 @@ cron "chef_couchdb_daily" do
   home "/var/chef"
   command "/var/chef/couchdb/couchdb_daily.sh"
 end
-
-include_recipe "git"
