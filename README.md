@@ -5,7 +5,9 @@ This cookbook contains some recipes for basic configuration of NeCTAR virtuals
 
 The "setup" recipe and its child recipes have been tested on virtuals running NeCTAR CentOS 6.4 and Ubuntu 13.04 images.  There is an expectation that they will also work on other recent RHEL / CentOS / Scientific Linux and Ubuntu / Debian distros.
 
-The "mount_rdsi_collections" recipe is QCloud / QRISCloud specific.  I don't have details about how RDSI Collection mounts would be implemented on other Nodes.
+The "mount_rdsi_collections" recipe is QCloud / QRISCloud specific.  (I don't have details about how RDSI Collection mounts would be implemented on other Nodes.)
+
+The "chef-server" recipe installs a Chef Server instance on a virtual.
 
 Recipe - "setup"
 ================
@@ -184,3 +186,25 @@ TO-DO LIST
 * Support EC2 authentication in the openstack_clients recipe.
 * Support multiple tenants for the usecase where you are installing openstack
   clients on desktop / laptop PC.
+
+
+Recipe - chef-server
+====================
+
+This recipe uses the standard Opscode "chef-server" recipe to create a Chef Server instance on this virtual.  It also sets up cron jobs to:
+
+* perform daily backups of the Chef Server's critical state, and 
+* do daily maintenance of the CouchDB service.
+
+Note that:
+
+* This recipe is only viable for platforms for which "Chef Server Omnibus" packages are available.
+* Chef Server requires (at least) port 443 to be open.
+* By default, this recipe will install the "latest" Omnibus version of Chef Server available.
+
+Attributes
+----------
+
+See https://github.com/opscode-cookbooks/chef-server/blob/master/README.md.
+
+Note that further Chef Server options can be specified via the 'configuration' hash, as described in the README.
