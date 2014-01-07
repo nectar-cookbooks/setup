@@ -61,5 +61,5 @@ if node['qcloud']['antivirus'] then
 end
 
 if node['qcloud']['openstack_clients'] then
-  include_recipe 'qcloud::openstack-clients.rb'
+  include_recipe 'qcloud::openstack-clients'
 end
