@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: qcloud
+# Cookbook Name:: setup
 # Recipe:: chef-server
 #
 # Copyright (c) 2012, 2014, The University of Queensland

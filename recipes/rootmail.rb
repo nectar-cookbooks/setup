@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: qcloud
+# Cookbook Name:: setup
 # Recipe:: rootmail
 #
-# Copyright (c) 2013, The University of Queensland
+# Copyright (c) 2013, 2014, The University of Queensland
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-root_email = node['qcloud']['root_email'] || []
+root_email = node['setup']['root_email'] || []
 if root_email.is_a? String then
   root_email = [ root_email ]
 end

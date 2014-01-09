@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: qcloud
+# Cookbook Name:: setup
 # Recipe:: openstack-clients
 #
 # Copyright (c) 2014, The University of Queensland
@@ -42,12 +42,12 @@ package 'python-keystoneclient' do
   action :install
 end
 
-os_tenant_name = node['qcloud']['openstack_tenant_name']
-os_tenant_id = node['qcloud']['openstack_tenant_id']
-os_auth_url = node['qcloud']['openstack_auth_url']
-os_username = node['qcloud']['openstack_username']
-os_password = node['qcloud']['openstack_password']
-os_rc_path = node['qcloud']['openstack_rc_path']
+os_tenant_name = node['setup']['openstack_tenant_name']
+os_tenant_id = node['setup']['openstack_tenant_id']
+os_auth_url = node['setup']['openstack_auth_url']
+os_username = node['setup']['openstack_username']
+os_password = node['setup']['openstack_password']
+os_rc_path = node['setup']['openstack_rc_path']
 
 if os_tenant_name then
   # If we are use the default rc path, automatically create the parent dir 

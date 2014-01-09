@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: qcloud
+# Cookbook Name:: setup
 # Recipe:: set_hostname
 #
-# Copyright (c) 2013, The University of Queensland
+# Copyright (c) 2013, 2014, The University of Queensland
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@ require 'resolv'
 ip = node['ipaddress']
 ip_fqdns = Resolv::DNS.new.getnames(ip)
 
-fqdn = node['qcloud']['set_fqdn']
+fqdn = node['setup']['set_fqdn']
 if fqdn == '*' then
   if !ip_fqdns || ip_fqdns.empty?() then
     raise 'Resolv::DNS cannot tell us what our hostnames are!?!'

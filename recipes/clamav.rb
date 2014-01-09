@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: qcloud
+# Cookbook Name:: setup
 # Recipe:: clamav
 #
 # Copyright (c) 2013, 2014, The University of Queensland
@@ -29,7 +29,7 @@
 
 include_recipe "clamav"
 
-clamscan = node['qcloud']['clamscan']
+clamscan = node['setup']['clamscan']
 scans = clamscan['scans'] 
 schedule = clamscan['schedule']
 if !schedule.kind_of?(Array) || schedule.length != 5 

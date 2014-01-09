@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: qcloud
+# Cookbook Name:: setup
 # Recipe:: mount_rdsi_collections
 #
-# Copyright (c) 2013, The University of Queensland
+# Copyright (c) 2013, 2014, The University of Queensland
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@ package "autofs" do
 end
 
 # Validate the Store ids 
-node['qcloud']['store_ids'].each() do |store_id|
+node['setup']['store_ids'].each() do |store_id|
   if ! /Q[0-9][0-9]([0-9][0-9])?/.match(store_id) then
     raise "Invalid store id (#{store_id}) : expected Qnn or Qnnnn"
   end
@@ -92,7 +92,7 @@ else
 end
 
 # Create local users to match the standard uids in the collection filesystems.
-if node['qcloud']['create_users'] then
+if node['setup']['create_users'] then
   group 'webdav' do
     gid 48
     system true
@@ -104,7 +104,7 @@ if node['qcloud']['create_users'] then
     comment 'WebDAV'
     shell '/sbin/nologin'
   end
-  node['qcloud']['store_ids'].each() do |store_id|
+  node['setup']['store_ids'].each() do |store_id|
     num = /Q([0-9]+)/.match(store_id)[1].to_i()
     if num > 999 then
       raise "The store_id to uid mapping is not defined for #{store_id}"
@@ -117,7 +117,7 @@ if node['qcloud']['create_users'] then
       uid 54000 + num
       gid store_id.downcase()
       system true
-      home "#{node['qcloud']['mount_dir']}/#{store_id}"
+      home "#{node['setup']['mount_dir']}/#{store_id}"
       comment ''
       shell '/sbin/nologin'
     end
@@ -141,9 +141,9 @@ template "/etc/auto.qcloud" do
   source "autofs_direct_map.erb"
   mode 0444
   variables ({
-    :store_ids => node['qcloud']['store_ids'],
-    :nfs_server => node['qcloud']['nfs_server'],
-    :mount_dir => node['qcloud']['mount_dir'],
+    :store_ids => node['setup']['store_ids'],
+    :nfs_server => node['setup']['nfs_server'],
+    :mount_dir => node['setup']['mount_dir'],
     :opts => opts
   })
   notifies :restart, "service[autofs]", :immediately

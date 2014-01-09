@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: qcloud
-# Recipe:: setup
+# Cookbook Name:: setup
+# Recipe:: default
 #
-# Copyright (c) 2013, The University of Queensland
+# Copyright (c) 2013, 2014, The University of Queensland
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,37 +29,37 @@
 
 require 'ipaddr'
 
-if node['qcloud']['tz'] then
-  node.normal['tz'] = node['qcloud']['tz']
+if node['setup']['tz'] then
+  node.normal['tz'] = node['setup']['tz']
   include_recipe 'timezone-ii::default'
 end
 
-if node['qcloud']['set_fqdn'] then
-  include_recipe 'qcloud::set_hostname'
+if node['setup']['set_fqdn'] then
+  include_recipe 'setup::set_hostname'
 end
 
 include_recipe 'locale'
 
-if node['qcloud']['root_email'] then
-  include_recipe 'qcloud::rootmail'
+if node['setup']['root_email'] then
+  include_recipe 'setup::rootmail'
 end
 
-if node['qcloud']['logwatch'] then
-  include_recipe 'qcloud::logwatch'
+if node['setup']['logwatch'] then
+  include_recipe 'setup::logwatch'
 end
 
-if node['qcloud']['mail_relay'] then
-  include_recipe 'qcloud::mail_relay'
+if node['setup']['mail_relay'] then
+  include_recipe 'setup::mail_relay'
 end
 
-if node['qcloud']['apply_patches'] then
-  include_recipe 'qcloud::autopatching'
+if node['setup']['apply_patches'] then
+  include_recipe 'setup::autopatching'
 end
 
-if node['qcloud']['antivirus'] then
-  include_recipe 'qcloud::clamav'
+if node['setup']['antivirus'] then
+  include_recipe 'setup::clamav'
 end
 
-if node['qcloud']['openstack_clients'] then
-  include_recipe 'qcloud::openstack-clients'
+if node['setup']['openstack_clients'] then
+  include_recipe 'setup::openstack-clients'
 end

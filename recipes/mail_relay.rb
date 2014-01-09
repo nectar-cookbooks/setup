@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: qcloud
+# Cookbook Name:: setup
 # Recipe:: mail_relay
 #
-# Copyright (c) 2013, The University of Queensland
+# Copyright (c) 2013, 2014, The University of Queensland
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-mail_relay = node['qcloud']['mail_relay']
+mail_relay = node['setup']['mail_relay']
 
 if mail_relay then
   node.override['postfix']['relayhost'] = mail_relay
