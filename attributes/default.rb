@@ -26,5 +26,3 @@ node.normal['clamav']['freshclam']['enabled'] = true
 node.default['setup']['openstack_rc_path'] = '/etc/openstack/authrc.sh'
 node.default['setup']['openstack_auth_url'] =
   'https://keystone.rc.nectar.org.au:5000/v2.0/'
-
-node.normal['chef-server']['version'] = 'latest'
