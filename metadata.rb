@@ -1,8 +1,8 @@
 maintainer "Stephen Crawley"
 maintainer_email "s.crawley at uq dot edu dot au"
 license "BSD"
-description "Some recipes for Qcloud configuration"
-version "0.0.1"
+description "Some recipes for general NeCTAR virtual configuration"
+version "1.0.0"
 
 depends "timezone-ii", ">= 0.2.0"
 depends "hostsfile"
