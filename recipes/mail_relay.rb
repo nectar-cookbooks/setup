@@ -28,7 +28,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-mail_relay = (node['setup']['mail_relay'] ? '').trim
+mail_relay = (node['setup']['mail_relay'] ? '').strip
 
 if ! mail_relay.empty? then
   if ['localhost', node['hostname'].downcase, 

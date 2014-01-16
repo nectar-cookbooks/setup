@@ -44,8 +44,8 @@ root_email.each do |email|
   elsif parts.length == 1 then
     cleaned_root_email << email
   elsif parts.length == 2 then
-    user = parts[0].trim 
-    domain = parts[1].trim
+    user = parts[0].strip
+    domain = parts[1].strip
     if user.length == 0 then
       raise "Invalid root_email address: '#{email}' - empty username"
     end
