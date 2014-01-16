@@ -10,4 +10,6 @@ depends "logwatch"
 depends "postfix"
 depends "clamav"
 depends "locale"
+depends "sudo"
+depends "users"
 
