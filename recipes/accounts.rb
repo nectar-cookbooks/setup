@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: setup
-# Recipe:: default
+# Recipe:: accounts
 #
 # Copyright (c) 2013, 2014, The University of Queensland
 # All rights reserved.
@@ -27,45 +27,45 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'ipaddr'
+if node['setup']['accounts']['generate_sudoers'] then
+  admin_group = (node['setup']['accounts']['admin_group'] || 'wheel').strip
+  admin_user = (node['setup']['accounts']['admin_user'] || '').strip
+  if admin_user.empty? then
+    if platform_family?('rhel', 'fedora') then
+      admin_user = 'ec2_user'
+    elsif platform('ubuntu') then
+      admin_user = 'ubuntu'
+    else
+      # Please let me know if this happens ...
+      raise "Don't know what the admin account name should be" 
+    end
+  end
+  passwordless = node['setup']['accounts']['passwordless_sudo'] || false  
 
-if node['setup']['tz'] then
-  node.normal['tz'] = node['setup']['tz']
-  include_recipe 'timezone-ii::default'
+  if ! admin_group.empty? then
+    node.default['authorization']['sudo']['groups'] = [admin_group]
+  end
+  if admin_user != 'none' then
+    node.default['authorization']['sudo']['include_sudoers_d'] = true
+  end
+  node.default['authorization']['sudo']['passwordless'] = passwordless
+  
+  include_recipe "sudo::default"
+  
+  if admin_user != 'none' then
+    # Create the passwordless sudoers entry for the admin account.
+    sudo 'admin_ac' do
+      nopasswd true
+      user admin_user
+    end
+  end
 end
 
-if node['setup']['set_fqdn'] then
-  include_recipe 'setup::set_hostname'
+if node['setup']['accounts']['create_users'] then
+  include_recipe "users"
+  users_manage "admin" do
+    data_bag "users"
+    group_name "wheel"
+  end
 end
 
-include_recipe 'locale'
-
-if node['setup']['accounts'] &&
-   (node['setup']['accounts']['create_users'] || 
-    node['setup']['accounts']['generate_sudoers']) then
-  include_recipe 'setup::accounts'
-end
-
-if node['setup']['root_email'] then
-  include_recipe 'setup::rootmail'
-end
-
-if node['setup']['logwatch'] then
-  include_recipe 'setup::logwatch'
-end
-
-if node['setup']['mail_relay'] then
-  include_recipe 'setup::mail_relay'
-end
-
-if node['setup']['apply_patches'] then
-  include_recipe 'setup::autopatching'
-end
-
-if node['setup']['antivirus'] then
-  include_recipe 'setup::clamav'
-end
-
-if node['setup']['openstack_clients'] then
-  include_recipe 'setup::openstack-clients'
-end
