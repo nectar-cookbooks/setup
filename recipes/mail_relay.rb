@@ -28,9 +28,14 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-mail_relay = node['setup']['mail_relay']
+mail_relay = (node['setup']['mail_relay'] ? '').trim
 
-if mail_relay then
+if ! mail_relay.empty? then
+  if ['localhost', node['hostname'].downcase, 
+      node['fqdn'].downcase].contains(mail_relay) then
+    raise "The 'mail_relay' host cannot be this host"
+  end
+  
   node.override['postfix']['relayhost'] = mail_relay
   include_recipe 'postfix::default'
 end
