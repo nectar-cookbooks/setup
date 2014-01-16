@@ -24,15 +24,16 @@ Attributes:
 -----------
 
 * `node['setup']['tz']` - The required timezone; e.g. "Australia/Brisbane".  If unset (or 'nil') the timezone is not altered.
-* `node['setup']['set_fqdn']` - The required FQDN.  If "*", the virtual's hostname is determined by a reverse DNS lookup of the IP address.  (On a NeCTAR node, that should give an address of the form "vm-<num>-<num>-<num>-<num>.<cell>.nectar.org.au".) If unset (or 'nil') the hostname is not altered.
+* `node['setup']['set_fqdn']` - The required FQDN.  If "*", the virtual's hostname is determined by a reverse DNS lookup of the IP address.  (On a NeCTAR node, that should be a DNS name of the form "vm-xxx-xxx-xxx-xxx.&lt;cell&gt;.nectar.org.au".) If unset (or 'nil') the hostname is not altered.
 * `node['setup']['root_email']` - An array of email addresses that root email should be redirected to.  If unset (or 'nil') the root email alias is not altered.  If '[]' then the root mail alias (if any) is removed.  NB: redirecting root email to an off-machine address only works if 'mail_relay' is configured.
-* `node['setup']['mail_relay'] - If set, configure the system to relay outgoing email via the SMTP host given by the attribute.
+* `node['setup']['mail_relay']` - If set, configure the system to relay outgoing email via the SMTP host given by the attribute.
 * `node['setup']['logwatch']` - If true, run the standard Opscode logwatch recipe.  Refer to https://github.com/opscode-cookbooks/logwatch for details of the attributes.
 * `node['setup']['apply_patches']` - This determines whether / how we configure auto-patching.  The standard values are "all", "security" and "none".  The default is "all".  (See the "autopatching" documentation below.)
 * `node['setup']['antivirus']` - This determines whether or not we configure ClamAV for virus checking.  If the attribute is truthy, "clamav" recipe (described below) is run.  The default is false.
 * `node['setup']['openstack_clients']` - This determines whether or not we install OpenStack clients and credentials.  The default is false.
 
-Note: some "funky things" happen when a NeCTAR node is provisioned which may leave your virtual in a state where DHCP says the hostname is the name of the NeCTAR project ... which doesn't resolve as a DNS name.
+Note: current scheme for provisioning a NeCTAR node may leave your virtual
+with an invalid hostname.  Using 'set_fqdn' with the value "*" fixes this the first time you run chef-client or chef-solo.  However, this might be "too late" for other recipes.  (The simple way to deal with this is to run just the "setup::default" recipe on a newly provisioned node before adding other recipes to the node's run-list.)
 
 Recipe - "mount_rdsi_collections"
 =================================
