@@ -57,7 +57,7 @@ root_email.each do |email|
     if node['setup']['mail_relay'] then
       domain = domain.downcase
       if ! ['localhost', node['hostname'].downcase, 
-            node['fqdn'].downcase].contains(domain) then
+            node['fqdn'].downcase].include?(domain) then
         raise "'mail_relay' must be set for an off-host 'root_mail'"
       end
     end

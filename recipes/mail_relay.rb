@@ -32,7 +32,7 @@ mail_relay = (node['setup']['mail_relay'] ? '').strip
 
 if ! mail_relay.empty? then
   if ['localhost', node['hostname'].downcase, 
-      node['fqdn'].downcase].contains(mail_relay) then
+      node['fqdn'].downcase].include?(mail_relay) then
     raise "The 'mail_relay' host cannot be this host"
   end
   
