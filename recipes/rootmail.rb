@@ -54,7 +54,7 @@ root_email.each do |email|
     end
     # If the 'domain' is not recognizable as "this host", then we must
     # have a 'mail_relay' set up
-    if ! (node['setup']['mail_relay'] ? '').strip.empty? then
+    if ! (node['setup']['mail_relay'] || '').strip.empty? then
       domain = domain.downcase
       if ! ['localhost', node['hostname'].downcase, 
             node['fqdn'].downcase].include?(domain) then
