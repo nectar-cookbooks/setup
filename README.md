@@ -140,10 +140,14 @@ Attributes for the user creation functionality
 * `node['setup']['accounts']['create_users']` - This determines whether user 
   accounts will be created from the "users" databag.  It defaults to false.
 
-Note that we use the Opscode "users" cookbook to implement user creation.  That
+We use the Opscode "users" cookbook to implement user creation.  That
 recipe will automatically create both users and groups.  Beware of the 
 interaction between creation of the "sysadmin" group and group-based sudo 
 access. 
+
+The "data-bags/example-users/" directory contains some examples of the
+syntax of a "users" data-bag entry.  Refer to the Opscode "users" cookbook
+documentation for more information.
 
 Recipe - logwatch
 =================
