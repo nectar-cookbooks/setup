@@ -26,3 +26,10 @@ node.normal['clamav']['freshclam']['enabled'] = true
 node.default['setup']['openstack_rc_path'] = '/etc/openstack/authrc.sh'
 node.default['setup']['openstack_auth_url'] =
   'https://keystone.rc.nectar.org.au:5000/v2.0/'
+
+node.default['setup']['accounts']['generate_sudoers'] = false
+node.default['setup']['accounts']['sysadmin_passwordless'] = false
+node.default['setup']['accounts']['admin_user'] = nil
+node.default['setup']['accounts']['sysadmin_group_sudo'] = false
+node.default['setup']['accounts']['sysadmin_group_id'] = nil
+node.default['setup']['accounts']['create_users'] = false

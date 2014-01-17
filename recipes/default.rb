@@ -40,6 +40,12 @@ end
 
 include_recipe 'locale'
 
+if node['setup']['accounts'] &&
+   (node['setup']['accounts']['create_users'] || 
+    node['setup']['accounts']['generate_sudoers']) then
+  include_recipe 'setup::accounts'
+end
+
 if node['setup']['root_email'] then
   include_recipe 'setup::rootmail'
 end
