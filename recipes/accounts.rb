@@ -46,7 +46,7 @@ if node['setup']['accounts']['generate_sudoers'] then
     end
     admin_users.each do | candidate | 
       # Test if account exists ...
-      cmd = Mixlib::ShellOut("id -u #{candidate}").run_command
+      cmd = Mixlib::ShellOut.new("id -u #{candidate}").run_command
       if cmd.exitstatus == 0 then
         admin_user = candidate
         break
