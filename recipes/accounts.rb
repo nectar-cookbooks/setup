@@ -59,9 +59,7 @@ if node['setup']['accounts']['generate_sudoers'] then
   end
   passwordless = node['setup']['accounts']['passwordless_sudo'] || false  
 
-  if admin_user != 'none' then
-    node.default['authorization']['sudo']['include_sudoers_d'] = true
-  end
+  node.default['authorization']['sudo']['include_sudoers_d'] = true
   node.default['authorization']['sudo']['passwordless'] = passwordless
   
   include_recipe "sudo::default"
