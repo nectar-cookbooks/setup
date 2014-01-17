@@ -114,17 +114,22 @@ Attributes for the "sudoers" regeneration functionality
 
 Notes:
 
-1. The Opscode "sudo" recipe that we use will automatically create
+1. The generated "sudoers" file does not contain the distro-specific 
+   "Default" settings from your system's original sudoer's file.  If you
+   want to add these, you will need to do this via the "sudo" cookbook's
+   `node['authorization']['sudo']['sudoers_defaults']` attribute; see
+   that cookbook's documentation for examples.
+2. The Opscode "sudo" recipe that we use will automatically create
    a group sudo entry for a group called "sysadmin".  The corresponding
    group doesn't exist by default, and setting 'group_sudo' causes the
    group to be created if required.  (But so does 'create_users'!)
-2. The 'passwordless_sudo' attribute does not affect the admin user account.
+3. The 'passwordless_sudo' attribute does not affect the admin user account.
    If sudo access is enabled from the admin account, it is always passwordless.
-3. You can disable sudo access for the admin account by setting 'admin_user'
+4. You can disable sudo access for the admin account by setting 'admin_user'
    to "none".  (Do this if you don't want passwordless sudo on the admin
    account ... but be aware that you MUST have group-base sudo working 
    properly or you risk locking yourself out!)
-4. The "accounts" recipe implement the sudo access for the admin account
+5. The "accounts" recipe implement the sudo access for the admin account
    by creating a file in "/etc/sudoers.d".  However, if you change your mind
    the recipe does not have the ability to remove this file.  You will need
    to remove the file by hand.
