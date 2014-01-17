@@ -28,7 +28,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 if node['setup']['accounts']['generate_sudoers'] then
-  admin_group = (node['setup']['accounts']['admin_group'] || 'wheel').strip
   admin_user = (node['setup']['accounts']['admin_user'] || '').strip
   if admin_user.empty? then
     # Heuristic based on the (known) history of admin account names used
@@ -60,9 +59,6 @@ if node['setup']['accounts']['generate_sudoers'] then
   end
   passwordless = node['setup']['accounts']['passwordless_sudo'] || false  
 
-  if ! admin_group.empty? then
-    node.default['authorization']['sudo']['groups'] = [admin_group]
-  end
   if admin_user != 'none' then
     node.default['authorization']['sudo']['include_sudoers_d'] = true
   end
@@ -77,13 +73,20 @@ if node['setup']['accounts']['generate_sudoers'] then
       user admin_user
     end
   end
-end
 
-if node['setup']['accounts']['create_users'] then
-  include_recipe "users"
-  users_manage "admin" do
-    data_bag "users"
-    group_name "wheel"
+  if node['setup']['accounts']['group_sudo'] then
+    group 'sysadmin' do
+      action :create
+      system true
+    end
   end
 end
+
+#if node['setup']['accounts']['create_users'] then
+#  include_recipe "users"
+#  users_manage "admin" do
+#    data_bag "users"
+#    group_name "wheel"
+#  end
+#end
 

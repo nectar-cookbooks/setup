@@ -14,6 +14,7 @@ The "setup::default" recipe does some simple configuration that typically needs 
 
 * setting the hostname and creating /etc/hosts entries
 * setting the timezone and locale,
+* configure user accounts and the sudoers file,
 * configuring a root mail aliases and relaying,
 * configuring automatic patching
 * configuring logfile scanning
@@ -25,6 +26,8 @@ Attributes:
 
 * `node['setup']['tz']` - The required timezone; e.g. "Australia/Brisbane".  If unset (or 'nil') the timezone is not altered.
 * `node['setup']['set_fqdn']` - The required FQDN.  If "*", the virtual's hostname is determined by a reverse DNS lookup of the IP address.  (On a NeCTAR node, that should be a DNS name of the form "vm-xxx-xxx-xxx-xxx.&lt;cell&gt;.nectar.org.au".) If unset (or 'nil') the hostname is not altered.
+* `node['setup']['accounts']['generate_sudoers']` - This determines whether the "/etc/sudoers" file will be (re-)generated.  It defaults to false  (See the "accounts" documentation below.)
+* `node['setup']['accounts']['create_users']` - This determines whether user accounts will be created from the "users" databag.  It defaults to false  (See the "accounts" documentation below.)
 * `node['setup']['root_email']` - An array of email addresses that root email should be redirected to.  If unset (or 'nil') the root email alias is not altered.  If '[]' then the root mail alias (if any) is removed.  NB: redirecting root email to an off-machine address only works if 'mail_relay' is configured.
 * `node['setup']['mail_relay']` - If set, configure the system to relay outgoing email via the SMTP host given by the attribute.
 * `node['setup']['logwatch']` - If true, run the standard Opscode logwatch recipe.  Refer to https://github.com/opscode-cookbooks/logwatch for details of the attributes.
@@ -71,6 +74,67 @@ The recipe is controlled by the following attributes.
 ```
 
 * `node['setup']['create_users']` - if true, the recipe will create local users and groups to match the uid/gid numbers you would expect to see on the collection.  Defaults to true.
+
+Recipe - accounts
+=================
+
+This recipe does (can do) the following things:
+
+* It can regenerate the "/etc/sudoers" file.
+
+* It can create user accounts from the contents of the "users" databag.  
+  The user account details can include SSH keys, encrypted passwords 
+  and group membership.
+
+WARNING: a problem in regenerating the "/etc/sudoers" file has the potential
+to take away your ability to administer your virtual.  As a 
+precaution, we recommend starting a separate SSH session with a root 
+shell BEFORE you do a Chef run that will regenerate the "sudoers" file.  
+If something goes wrong, you can then use the root shell to restore the 
+original "/etc/sudoers" file from "/var/chef/backups".  (It might be 
+possible to fix the damage other ways, but it would be a difficult proposition.)
+
+Attributes for the "sudoers" regeneration functionality
+-------------------------------------------------------
+
+* `node['setup']['accounts']['generate_sudoers']` - This determines whether 
+  the "/etc/sudoers" file will be (re-)generated.  It defaults to false.  
+  (You noted the WARNING above ... I hope.)
+* `node['setup']['accounts']['admin_user']` - This gives the account name for
+  the admin user.  If unset, the recipe tries various platform specific 
+  defaults to identify the account.  The account must already exist, as this
+  recipe won't create it.  
+* `node['setup']['accounts']['group_sudo']` - This determines whether
+  group-based sudo is enabled.  It defaults to false.  (The group is 'sysadmin'
+  on all platforms apart for Mac OSX.)
+* `node['setup']['accounts']['passwordless_sudo']` - This determines whether 
+  group-based sudo requires a password.  This defaults to false.  (If you 
+  set it to true, the relevant accounts need to have a password set for 
+  "sudo" to work.)
+
+Notes:
+
+1. The Opscode "sudo" recipe that we use will automatically create
+   a group sudo entry for a group called "sysadmin".  The corresponding
+   group doesn't exist by default, and setting 'group_sudo' causes the
+   group to be created if required.  (But so does 'create_users'!)
+2. The 'passwordless_sudo' attribute does not affect the admin user account.
+   If sudo access is enabled from the admin account, it is always passwordless.
+3. You can disable sudo access for the admin account by setting 'admin_user'
+   to "none".  (Do this if you don't want passwordless sudo on the admin
+   account ... but be aware that you MUST have group-base sudo working 
+   properly or you risk locking yourself out!)
+
+Attributes for the user creation functionality
+----------------------------------------------
+
+* `node['setup']['accounts']['create_users']` - This determines whether user 
+  accounts will be created from the "users" databag.  It defaults to false.
+
+Note that we use the Opscode "users" cookbook to implement user creation.  That
+recipe will automatically create both users and groups.  Beware of the 
+interaction between creation of the "sysadmin" group and group-based sudo 
+access. 
 
 Recipe - logwatch
 =================
