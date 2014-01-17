@@ -2,7 +2,7 @@
 # Cookbook Name:: setup
 # Recipe:: accounts
 #
-# Copyright (c) 2013, 2014, The University of Queensland
+# Copyright (c) 2014, The University of Queensland
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -31,13 +31,31 @@ if node['setup']['accounts']['generate_sudoers'] then
   admin_group = (node['setup']['accounts']['admin_group'] || 'wheel').strip
   admin_user = (node['setup']['accounts']['admin_user'] || '').strip
   if admin_user.empty? then
+    # Heuristic based on the (known) history of admin account names used
+    # in NeCTAR standard images.
     if platform_family?('rhel', 'fedora') then
-      admin_user = 'ec2_user'
+      admin_users = ['ec2-user', 'centos']
     elsif platform('ubuntu') then
-      admin_user = 'ubuntu'
+      admin_users = ['ubuntu']
+    elsif platform('debian') then
+      admin_users = ['debian']
     else
       # Please let me know if this happens ...
-      raise "Don't know what the admin account name should be" 
+      raise "Cannot deduce an admin account name for this" +
+            "system - platform #{node.platform} not supported (yet)" 
+    end
+    admin_users.each do | candidate | 
+      # Test if account exists ...
+      cmd = Mixlib::ShellOut("id -u #{candidate}").run_command
+      if cmd.exitstatus == 0 then
+        admin_user = candidate
+        break
+      end
+    end
+    if admin_user.empty? then
+      # Please let me know if this happens ...
+      raise "Cannot deduce the admin account name for this system: " +
+            "tried #{admin_users.join(', ')}"
     end
   end
   passwordless = node['setup']['accounts']['passwordless_sudo'] || false  
