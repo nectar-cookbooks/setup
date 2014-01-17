@@ -31,5 +31,5 @@ node.default['setup']['accounts']['generate_sudoers'] = false
 node.default['setup']['accounts']['sysadmin_passwordless'] = false
 node.default['setup']['accounts']['admin_user'] = nil
 node.default['setup']['accounts']['sysadmin_group_sudo'] = false
-node.default['setup']['accounts']['sysadmin_group_id'] = 2300
+node.default['setup']['accounts']['sysadmin_group_id'] = nil
 node.default['setup']['accounts']['create_users'] = false

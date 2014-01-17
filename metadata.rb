@@ -12,4 +12,4 @@ depends "clamav"
 depends "locale"
 depends "sudo"
 depends "users"
-
+depends "chef-solo-search"
