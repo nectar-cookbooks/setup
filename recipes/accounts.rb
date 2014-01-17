@@ -27,6 +27,9 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+sysadmin_group = 'sysadmin' # ... matching what the "sudo" recipe creates
+sysadmin_gid = node['setup']['accounts']['sysadmin_group_id']
+
 if node['setup']['accounts']['generate_sudoers'] then
   admin_user = (node['setup']['accounts']['admin_user'] || '').strip
   if admin_user.empty? then
@@ -57,10 +60,10 @@ if node['setup']['accounts']['generate_sudoers'] then
             "tried #{admin_users.join(', ')}"
     end
   end
-  passwordless = node['setup']['accounts']['passwordless_sudo'] || false  
+  nopasswd = node['setup']['accounts']['sysadmin_passwordless'] || false  
 
   node.default['authorization']['sudo']['include_sudoers_d'] = true
-  node.default['authorization']['sudo']['passwordless'] = passwordless
+  node.default['authorization']['sudo']['passwordless'] = nopasswd
   
   include_recipe "sudo::default"
   
@@ -72,19 +75,23 @@ if node['setup']['accounts']['generate_sudoers'] then
     end
   end
 
-  if node['setup']['accounts']['group_sudo'] then
-    group 'sysadmin' do
-      action :create
+  if node['setup']['accounts']['sysadmin_group_sudo'] then
+    group sysadmin_group do
+      if sysadmin_gid then
+        gid sysadmin_gid
+      end
       system true
     end
   end
 end
 
-#if node['setup']['accounts']['create_users'] then
-#  include_recipe "users"
-#  users_manage "admin" do
-#    data_bag "users"
-#    group_name "wheel"
-#  end
-#end
+if node['setup']['accounts']['create_users'] then
+  include_recipe "users"
+  users_manage sysadmin_group do
+    if sysadmin_gid then
+      group_id sysadmin_gid
+    end
+    action [:remove, :create]
+  end
+end
 

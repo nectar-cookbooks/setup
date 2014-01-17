@@ -104,8 +104,11 @@ Attributes for the "sudoers" regeneration functionality
   the admin user.  If unset, the recipe tries various platform specific 
   defaults to identify the account.  The account must already exist, as this
   recipe won't create it.  
-* `node['setup']['accounts']['group_sudo']` - This determines whether
+* `node['setup']['accounts']['sysadmin_group_sudo']` - This determines whether
   group-based sudo is enabled.  It defaults to false.  (The group is 'sysadmin'
+  on all platforms apart for Mac OSX.)
+* `node['setup']['accounts']['sysadmin_group_id']` - If specified, this gives 
+  the group id for the 'sysadmin' group.
   on all platforms apart for Mac OSX.)
 * `node['setup']['accounts']['passwordless_sudo']` - This determines whether 
   group-based sudo requires a password.  This defaults to false.  (If you 
