@@ -82,9 +82,9 @@ This recipe does (can do) the following things:
 
 * It can regenerate the "/etc/sudoers" file.
 
-* It can create user accounts from the contents of the "users" databag.  
-  The user account details can include SSH keys, encrypted passwords 
-  and group membership.
+* It can create user accounts for privileged users from the contents of 
+  the "users" databag.   The user account details can include SSH keys, 
+  encrypted passwords and group membership.
 
 WARNING: a problem in regenerating the "/etc/sudoers" file has the potential
 to take away your ability to administer your virtual.  As a 
@@ -137,20 +137,27 @@ Notes:
    the recipe does not have the ability to remove this file.  You will need
    to remove the file by hand.
 
-Attributes for the user creation functionality
-----------------------------------------------
+Attributes for the privileged user creation functionality
+---------------------------------------------------------
 
 * `node['setup']['accounts']['create_users']` - This determines whether user 
   accounts will be created from the "users" databag.  It defaults to false.
 
-We use the Opscode "users" cookbook to implement user creation.  That
+The default for NeCTAR images is to only allow key-based authentication over
+SSH.  This part of the "accounts" recipe supports that, and allows you to
+create accounts with pre-installed public keys.  You can also supply password
+hashes, but these are only used by "sudo" and other utilities that require
+extra authentication.
+
+We use the Opscode "users" cookbook to implement admin user creation.  That
 recipe will automatically create both users and groups.  Beware of the 
 interaction between creation of the "sysadmin" group and group-based sudo 
 access. 
 
 The "data-bags/example-users/" directory contains some examples of the
 syntax of a "users" data-bag entry.  Refer to the Opscode "users" cookbook
-documentation for more information.
+documentation for more information, including descriptions of how to lock
+and remove accounts.
 
 Recipe - logwatch
 =================
