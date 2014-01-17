@@ -124,6 +124,10 @@ Notes:
    to "none".  (Do this if you don't want passwordless sudo on the admin
    account ... but be aware that you MUST have group-base sudo working 
    properly or you risk locking yourself out!)
+4. The "accounts" recipe implement the sudo access for the admin account
+   by creating a file in "/etc/sudoers.d".  However, if you change your mind
+   the recipe does not have the ability to remove this file.  You will need
+   to remove the file by hand.
 
 Attributes for the user creation functionality
 ----------------------------------------------
