@@ -149,15 +149,21 @@ create accounts with pre-installed public keys.  You can also supply password
 hashes, but these are only used by "sudo" and other utilities that require
 extra authentication.
 
-We use the Opscode "users" cookbook to implement admin user creation.  That
-recipe will automatically create both users and groups.  Beware of the 
-interaction between creation of the "sysadmin" group and group-based sudo 
-access. 
+We use the Opscode "user_manage" resource from the "users" cookbook to implement admin user creation.  That
+recipe will automatically create both users and the "sysadmin" group.  Beware 
+of the interaction between creation of the "sysadmin" group and group-based 
+sudo access. 
 
 The "data-bags/example-users/" directory contains some examples of the
 syntax of a "users" data-bag entry.  Refer to the Opscode "users" cookbook
 documentation for more information, including descriptions of how to lock
 and remove accounts.
+
+There is one "gotcha" in the behaviour of "user_manage".  You would
+thing that the "groups" attribute behaves like the "groups" attribute on the
+"user" resource, and the user is added to all of those groups.  In fact, the
+"user_manage" resource only adds the newly created user to the group we are
+selecting; i.e. "sysadmin".
 
 Recipe - logwatch
 =================
