@@ -52,7 +52,6 @@ Limitations:
 ------------
 
 * This recipe is limitted to RDSI collections that are stored at the Queensland RDSI node, and virtuals that are hosted in QCloud.  (A private network is used for the NFS mounts.)
-
 * This recipe supports only Ubuntu and RHEL-based Linux.
 
 Attributes:
@@ -61,9 +60,7 @@ Attributes:
 The recipe is controlled by the following attributes.
 
 * `node['setup']['mount_dir']` - the directory in which the collections will be automounted.  The defaults to "/data".
-
 * `node['setup']['nfs_server']` - the address of the NFS server.  You should not need to change this.
-
 * `node['setup']['store_ids']` - an array (list) of store ids for RDSI collections.  These are (currently) of the form "Qnn" or "Qnnnn".  Defaults to an empty list ... so you need to override this; e.g. by adding something like the following to your "node.json" file.
 
 ```json
@@ -81,7 +78,6 @@ Recipe - accounts
 This recipe does (can do) the following things:
 
 * It can regenerate the "/etc/sudoers" file.
-
 * It can create user accounts for privileged users from the contents of 
   the "users" databag.   The user account details can include SSH keys, 
   encrypted passwords and group membership.
@@ -94,8 +90,8 @@ If something goes wrong, you can then use the root shell to restore the
 original "/etc/sudoers" file from "/var/chef/backups".  (It might be 
 possible to fix the damage other ways, but it would be a difficult proposition.)
 
-Attributes for the "sudoers" regeneration functionality
--------------------------------------------------------
+Attributes for "sudoers" regeneration
+-------------------------------------
 
 * `node['setup']['accounts']['generate_sudoers']` - This determines whether 
   the "/etc/sudoers" file will be (re-)generated.  It defaults to false.  
@@ -137,8 +133,8 @@ Notes:
    the recipe does not have the ability to remove this file.  You will need
    to remove the file by hand.
 
-Attributes for the privileged user creation functionality
----------------------------------------------------------
+Attributes for privileged user creation
+---------------------------------------
 
 * `node['setup']['accounts']['create_users']` - This determines whether user 
   accounts will be created from the "users" databag.  It defaults to false.
