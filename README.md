@@ -14,12 +14,12 @@ The "setup::default" recipe does some simple configuration that typically needs 
 
 * setting the hostname and creating /etc/hosts entries
 * setting the timezone and locale,
-* configure user accounts and the sudoers file,
+* configure privileged user accounts and the sudoers file,
 * configuring a root mail aliases and relaying,
 * configuring automatic patching
 * configuring logfile scanning
 * configuring anti-virus software and scanning
-* install OpenStack clients and configure credentials
+* installing OpenStack clients and configure credentials
 
 Attributes:
 -----------
@@ -27,7 +27,7 @@ Attributes:
 * `node['setup']['tz']` - The required timezone; e.g. "Australia/Brisbane".  If unset (or 'nil') the timezone is not altered.
 * `node['setup']['set_fqdn']` - The required FQDN.  If "*", the virtual's hostname is determined by a reverse DNS lookup of the IP address.  (On a NeCTAR node, that should be a DNS name of the form "vm-xxx-xxx-xxx-xxx.&lt;cell&gt;.nectar.org.au".) If unset (or 'nil') the hostname is not altered.
 * `node['setup']['accounts']['generate_sudoers']` - This determines whether the "/etc/sudoers" file will be (re-)generated.  It defaults to false  (See the "accounts" documentation below.)
-* `node['setup']['accounts']['create_users']` - This determines whether user accounts will be created from the "users" databag.  It defaults to false  (See the "accounts" documentation below.)
+* `node['setup']['accounts']['create_users']` - This determines whether privileged user accounts will be created from the "users" databag.  It defaults to false  (See the "accounts" documentation below.)
 * `node['setup']['root_email']` - An array of email addresses that root email should be redirected to.  If unset (or 'nil') the root email alias is not altered.  If '[]' then the root mail alias (if any) is removed.  NB: redirecting root email to an off-machine address only works if 'mail_relay' is configured.
 * `node['setup']['mail_relay']` - If set, configure the system to relay outgoing email via the SMTP host given by the attribute.
 * `node['setup']['logwatch']` - If true, run the standard Opscode logwatch recipe.  Refer to https://github.com/opscode-cookbooks/logwatch for details of the attributes.
@@ -145,18 +145,19 @@ create accounts with pre-installed public keys.  You can also supply password
 hashes, but these are only used by "sudo" and other utilities that require
 extra authentication.
 
-We use the Opscode "user_manage" resource from the "users" cookbook to implement admin user creation.  That
-recipe will automatically create both users and the "sysadmin" group.  Beware 
-of the interaction between creation of the "sysadmin" group and group-based 
-sudo access. 
+We use the Opscode "user_manage" resource from the "users" cookbook to 
+implement admin user creation for the "sysadmin" group.  That recipe 
+will automatically create both the user accounts and the "sysadmin" group
+if required.  (Note the relationship between creation of the "sysadmin"
+group and group-based sudo access; see above!)
 
 The "data-bags/example-users/" directory contains some examples of the
 syntax of a "users" data-bag entry.  Refer to the Opscode "users" cookbook
 documentation for more information, including descriptions of how to lock
 and remove accounts.
 
-There is one "gotcha" in the behaviour of "user_manage".  You would
-thing that the "groups" attribute behaves like the "groups" attribute on the
+There is one "gotcha" in the behaviour of "user_manage".  You would imagine
+that the "groups" attribute behaves like the "groups" attribute on the
 "user" resource, and the user is added to all of those groups.  In fact, the
 "user_manage" resource only adds the newly created user to the group we are
 selecting; i.e. "sysadmin".
