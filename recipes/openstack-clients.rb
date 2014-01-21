@@ -48,6 +48,8 @@ os_auth_url = node['setup']['openstack_auth_url']
 os_username = node['setup']['openstack_username']
 os_password = node['setup']['openstack_password']
 os_rc_path = node['setup']['openstack_rc_path']
+os_rc_user = node['setup']['openstack_rc_path'] || 'root'
+os_rc_group = node['setup']['openstack_rc_group'] || 'root'
 
 if os_tenant_name then
   # If we are use the default rc path, automatically create the parent dir 
@@ -58,8 +60,9 @@ if os_tenant_name then
     end
   end
   template os_rc_path do
-    owner 'root'
-    mode  0600
+    owner os_rc_user
+    group os_rc_group
+    mode  0440
     source 'openrc-sh.erb'
     variables({
                 :os_auth_url => os_auth_url,
