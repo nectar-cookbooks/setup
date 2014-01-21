@@ -27,19 +27,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#Experimental workaround ...
-if Chef::Config[:solo]
-  # Ensure the treetop gem is installed and available
-  begin
-    require 'treetop'
-  rescue LoadError
-    run_context = Chef::RunContext.new(Chef::Node.new, {}, Chef::EventDispatch::Dispatcher.new)
-    chef_gem = Chef::Resource::ChefGem.new("treetop", run_context)
-    chef_gem.version('>= 1.4')
-    chef_gem.run_action(:install)
-  end
-end
-
 sysadmin_group = 'sysadmin' # ... matching what the "sudo" recipe creates
 sysadmin_gid = node['setup']['accounts']['sysadmin_group_id']
 

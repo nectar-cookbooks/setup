@@ -48,7 +48,7 @@ os_auth_url = node['setup']['openstack_auth_url']
 os_username = node['setup']['openstack_username']
 os_password = node['setup']['openstack_password']
 os_rc_path = node['setup']['openstack_rc_path']
-os_rc_user = node['setup']['openstack_rc_path'] || 'root'
+os_rc_user = node['setup']['openstack_rc_user'] || 'root'
 os_rc_group = node['setup']['openstack_rc_group'] || 'root'
 
 if os_tenant_name then
