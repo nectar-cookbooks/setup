@@ -263,10 +263,14 @@ Attributes
 * `node['setup']['openstack_username']` - The NeCTAR username for authenticating.
 * `node['setup']['openstack_password']` - The OpenStack password for authenticating.
 * `node['setup']['openstack_rc_path']` - Pathname for the credentials script.  Defaults to "/etc/openstack/authrc.sh".
+* `node['setup']['openstack_rc_user']` - The owner of the credentials script.  Defaults to 'root'.
+* `node['setup']['openstack_rc_group']` - The owner of the credentials script.  Defaults to 'root'.
 
 If the 'openstack_tenant_name' attribute is defined and non-empty, then a 
 credentials file will be generated containing the details.
 
+The credentials script is created with permissions `0550`, and defaults to 
+having "root:root" ownership.
 
 TO-DO LIST
 ==========
