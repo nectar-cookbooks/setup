@@ -1,6 +1,9 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.1
+ - Make the owner/group of the openstack credentials file configurable (#4)
+	
 Version 1.1.0
 -------------
  - Added the 'accounts' recipe for creating privileged user accounts and
