@@ -30,7 +30,7 @@
 # Workaround for a bug in the standard ClamAV recipe.  (If this works,
 # it should be turned into a patch and submitted.)
 if node.default['clamav']['user'] == 'clamav' then
-  if platform_family?('redhat') then
+  if platform_family?('rhel') then
     node.default['clamav']['user'] = 'clam'
   elsif platform_family?('fedora') then
     node.default['clamav']['user'] = 'clamupdate'
