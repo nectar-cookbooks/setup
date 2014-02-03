@@ -27,6 +27,21 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Workaround for a bug in the standard ClamAV recipe.  (If this works,
+# it should be turned into a patch and submitted.)
+if node.default['clamav']['user'] == 'clamav' then
+  if platform_family?('rhel') then
+    node.default['clamav']['user'] = 'clam'
+  elsif platform_family?('fedora') then
+    node.default['clamav']['user'] = 'clamupdate'
+  else
+    node.default['clamav']['user'] = 'clamav'
+  end
+end
+if node.default['clamav']['group'] == 'clamav' then
+  node.default['clamav']['group'] = node.default['clamav']['user']
+end
+
 include_recipe "clamav"
 
 clamscan = node['setup']['clamscan']
