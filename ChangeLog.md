@@ -1,6 +1,11 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.3
+-------------
+ - Include 'glance' client in list of OpenStack clients installed (#12)
+ - Disable locale tweaking on Fedora as workaround for issue #13
+
 Version 1.1.2
 -------------
  - Workaround to get the clamav recipe to create the service user with the

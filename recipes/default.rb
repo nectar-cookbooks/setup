@@ -38,7 +38,10 @@ if node['setup']['set_fqdn'] then
   include_recipe 'setup::set_hostname'
 end
 
-include_recipe 'locale'
+# Workaround for issue #13 ... until I can get the offending recipe fixed.
+if platform_family?('rhel', 'debian') then
+  include_recipe 'locale'
+end
 
 if node['setup']['accounts'] &&
    (node['setup']['accounts']['create_users'] || 

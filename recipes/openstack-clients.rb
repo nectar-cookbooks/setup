@@ -27,9 +27,10 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Simply install the distro-supplied version for now.  (Some sources imply
+# Simply install the distro-supplied versions for now.  (Some sources imply
 # that there are version compatibility issues, and recommend building and
 # installing from source.  I'm not convinced ...)
+
 package 'python-swiftclient' do
   action :install
 end
@@ -39,6 +40,10 @@ package 'python-novaclient' do
 end
 
 package 'python-keystoneclient' do
+  action :install
+end
+
+package 'python-glance-client' do
   action :install
 end
 
