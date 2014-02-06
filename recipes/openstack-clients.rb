@@ -43,7 +43,7 @@ package 'python-keystoneclient' do
   action :install
 end
 
-package 'python-glance-client' do
+package 'python-glanceclient' do
   action :install
 end
 
