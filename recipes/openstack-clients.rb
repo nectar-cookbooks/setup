@@ -31,6 +31,8 @@
 # that there are version compatibility issues, and recommend building and
 # installing from source.  I'm not convinced ...)
 
+include_recipe 'python'
+
 clients = ['python-swiftclient', 'python-novaclient',
            'python-keystoneclient', 'python-glanceclient',
            'python-glanceclient']
