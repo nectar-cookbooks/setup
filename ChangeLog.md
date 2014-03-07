@@ -1,6 +1,11 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.4
+-------------
+ - Support 'pip' installation when clients are not in the package repo (#16)
+ - Include 'cinder' client in list of OpenStack clients installed (#17)
+
 Version 1.1.3
 -------------
  - Include 'glance' client in list of OpenStack clients installed (#12)
