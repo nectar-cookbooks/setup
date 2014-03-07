@@ -31,7 +31,7 @@
 # that there are version compatibility issues, and recommend building and
 # installing from source.  I'm not convinced ...)
 
-package 'python_pip' do
+package 'python-pip' do
   action :install
 end
 
