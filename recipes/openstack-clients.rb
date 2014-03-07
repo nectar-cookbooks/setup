@@ -31,8 +31,18 @@
 # that there are version compatibility issues, and recommend building and
 # installing from source.  I'm not convinced ...)
 
-package 'python-pip' do
-  action :install
+# Build dependencies for the python clients ... in case we need them.
+if platform_family?('debian') then
+  deps = ['python-pip', 'build-essential',
+          'libssl-dev', 'libffi-dev', 'python-dev']
+else
+  deps = ['python-pip', 'gcc', 'openssl-devel', 'libffi-devel', 'python-devel']
+end
+
+deps.each do |pkg|
+  package pkg do
+    action :install
+  end
 end
 
 clients = [['swift', 'python-swiftclient'], 
