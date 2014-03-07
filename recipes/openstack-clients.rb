@@ -35,25 +35,23 @@ package 'python-pip' do
   action :install
 end
 
-clients = ['python-swiftclient', 'python-novaclient',
-           'python-keystoneclient', 'python-glanceclient',
-           'python-glanceclient']
+clients = [['swift', 'python-swiftclient'], 
+           ['nova', 'python-novaclient'],
+           ['keystone', 'python-keystoneclient'], 
+           ['glance', 'python-glanceclient'],
+           ['cinder', 'python-cinderclient']]
 
 clients.each do |client|
-  package client do
+
+  package client[1] do
     action :install
     ignore_failure true
+    not_if "which #{client[0]}"
   end
 
   # If the package install failed, try Pip.
-  if platform_family?('debian') then
-    python_pip client do
-      not_if "dpkg-query -W #{client}"
-    end
-  elsif platform_family?('fedora', 'rhel') then
-    python_pip client do
-      only_if "test `rpm -qa | grep #{client} | wc -l` -eq 0"
-    end
+  python_pip client[1] do
+    not_if "which #{client[0]}"
   end
 end
 
