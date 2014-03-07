@@ -31,20 +31,26 @@
 # that there are version compatibility issues, and recommend building and
 # installing from source.  I'm not convinced ...)
 
-package 'python-swiftclient' do
-  action :install
-end
+clients = ['python-swiftclient', 'python-novaclient',
+           'python-keystoneclient', 'python-glanceclient',
+           'python-glanceclient']
 
-package 'python-novaclient' do
-  action :install
-end
+clients.each do |client|
+  package client do
+    action :install
+    ignore_failure true
+  end
 
-package 'python-keystoneclient' do
-  action :install
-end
-
-package 'python-glanceclient' do
-  action :install
+  # If the package install failed, try Pip.
+  if platform_family?('debian') then
+    python_pip client do
+      not_if "dpkg-query -W #{client}"
+    end
+  elsif platform_family?('fedora', 'rhel') then
+    python_pip client do
+      only_if "test `rpm -qa | grep #{client} | wc -l` -eq 0"
+    end
+  end
 end
 
 os_tenant_name = node['setup']['openstack_tenant_name']
