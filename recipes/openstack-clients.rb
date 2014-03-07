@@ -31,7 +31,9 @@
 # that there are version compatibility issues, and recommend building and
 # installing from source.  I'm not convinced ...)
 
-include_recipe 'python'
+package 'python_pip' do
+  action :install
+end
 
 clients = ['python-swiftclient', 'python-novaclient',
            'python-keystoneclient', 'python-glanceclient',
