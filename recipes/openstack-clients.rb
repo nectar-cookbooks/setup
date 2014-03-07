@@ -31,20 +31,38 @@
 # that there are version compatibility issues, and recommend building and
 # installing from source.  I'm not convinced ...)
 
-package 'python-swiftclient' do
-  action :install
+# Build dependencies for the python clients ... in case we need them.
+if platform_family?('debian') then
+  deps = ['python-pip', 'build-essential',
+          'libssl-dev', 'libffi-dev', 'python-dev']
+else
+  deps = ['python-pip', 'gcc', 'openssl-devel', 'libffi-devel', 'python-devel']
 end
 
-package 'python-novaclient' do
-  action :install
+deps.each do |pkg|
+  package pkg do
+    action :install
+  end
 end
 
-package 'python-keystoneclient' do
-  action :install
-end
+clients = [['swift', 'python-swiftclient'], 
+           ['nova', 'python-novaclient'],
+           ['keystone', 'python-keystoneclient'], 
+           ['glance', 'python-glanceclient'],
+           ['cinder', 'python-cinderclient']]
 
-package 'python-glanceclient' do
-  action :install
+clients.each do |client|
+
+  package client[1] do
+    action :install
+    ignore_failure true
+    not_if "which #{client[0]}"
+  end
+
+  # If the package install failed, try Pip.
+  python_pip client[1] do
+    not_if "which #{client[0]}"
+  end
 end
 
 os_tenant_name = node['setup']['openstack_tenant_name']
