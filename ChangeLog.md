@@ -1,6 +1,10 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.5
+-------------
+ - Added options to say whether to try distro or pip installs (#19)
+
 Version 1.1.4
 -------------
  - Support 'pip' installation when clients are not in the package repo (#16)
