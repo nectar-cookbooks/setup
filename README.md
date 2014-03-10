@@ -265,9 +265,18 @@ Attributes
 * `node['setup']['openstack_rc_path']` - Pathname for the credentials script.  Defaults to "/etc/openstack/authrc.sh".
 * `node['setup']['openstack_rc_user']` - The owner of the credentials script.  Defaults to 'root'.
 * `node['setup']['openstack_rc_group']` - The owner of the credentials script.  Defaults to 'root'.
+* `node['setup']['openstack_try_pip']` - If true, try to install clients from Pypy, using pip.  Defaults to true.
+* `node['setup']['openstack_try_distro']` - If true, try to install clients from the distro's repository.  Defaults to false.
 
 If the 'openstack_tenant_name' attribute is defined and non-empty, then a 
 credentials file will be generated containing the details.
+
+The 'openstack_try_pip' and 'openstack_try_distro' attributes allow you to
+say where to install clients from.  Installing from both places is somewhat
+risky, since you can get interoperability issues.  (For example on Ubuntu
+Precise, there is no Swift client in the package repo, and the Pypy version
+of the Swift client in incompatible with the Ubuntu precise version of the
+Keystone client.) 
 
 The credentials script is created with permissions `0550`, and defaults to 
 having "root:root" ownership.

@@ -44,24 +44,29 @@ deps.each do |pkg|
     action :install
   end
 end
+try_distro = node['setup']['openstack_try_distro']
+try_pip = node['setup']['openstack_try_pip']
 
-clients = [['swift', 'python-swiftclient'], 
-           ['nova', 'python-novaclient'],
-           ['keystone', 'python-keystoneclient'], 
+clients = [['keystone', 'python-keystoneclient'],
+           ['swift', 'python-swiftclient'], 
+           ['nova', 'python-novaclient'], 
            ['glance', 'python-glanceclient'],
            ['cinder', 'python-cinderclient']]
 
 clients.each do |client|
-
-  package client[1] do
-    action :install
-    ignore_failure true
-    not_if "which #{client[0]}"
+  if try_distro then
+    package client[1] do
+      action :install
+      ignore_failure true
+      not_if "which #{client[0]}"
+    end
   end
 
   # If the package install failed, try Pip.
-  python_pip client[1] do
-    not_if "which #{client[0]}"
+  if try_pip then
+    python_pip client[1] do
+      not_if "which #{client[0]}"
+    end
   end
 end
 

@@ -32,6 +32,8 @@ node.default['setup']['openstack_username'] = nil
 node.default['setup']['openstack_password'] = nil
 node.default['setup']['openstack_tenant_name'] = nil 
 node.default['setup']['openstack_tenant_id'] = nil
+node.default['setup']['openstack_try_pip'] = true
+node.default['setup']['openstack_try_distro'] = false
 
 node.default['setup']['accounts']['generate_sudoers'] = false
 node.default['setup']['accounts']['sysadmin_passwordless'] = false
