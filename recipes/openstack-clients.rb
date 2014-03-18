@@ -81,7 +81,7 @@ os_rc_group = node['setup']['openstack_rc_group'] || 'root'
 
 if os_tenant_name then
   # If we are use the default rc path, automatically create the parent dir 
-  if (Pathname.new(os_rc_path).dirname == '/etc/openstack') then
+  if (File.dirname(os_rc_path) == '/etc/openstack') then
     directory '/etc/openstack' do
       owner 'root'
       mode  0755
