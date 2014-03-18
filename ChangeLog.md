@@ -1,6 +1,10 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.6
+-------------
+ - Openstack-clients recipe doesn't create '/etc/openstack' (#21)
+
 Version 1.1.5
 -------------
  - Added options to say whether to try distro or pip installs (#19)
