@@ -1,6 +1,10 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.7
+-------------
+ - The autopatching recipe on Ubunto is leaving junk in 'apt.conf.d' (#23)
+
 Version 1.1.6
 -------------
  - Openstack-clients recipe doesn't create '/etc/openstack' (#21)
