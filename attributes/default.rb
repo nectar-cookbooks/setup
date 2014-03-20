@@ -28,6 +28,7 @@ node.default['setup']['openstack_rc_user'] = 'root'
 node.default['setup']['openstack_rc_group'] = 'root'
 node.default['setup']['openstack_auth_url'] =
   'https://keystone.rc.nectar.org.au:5000/v2.0/'
+node.default['setup']['openstack_auth_version'] = 2
 node.default['setup']['openstack_username'] = nil
 node.default['setup']['openstack_password'] = nil
 node.default['setup']['openstack_tenant_name'] = nil 
