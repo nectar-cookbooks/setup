@@ -85,6 +85,9 @@ when 'debian'
       file.write_file
     end
   end
+  bash 'unattended upgraded tidyup' do
+    code 'rm -f /etc/apt/apt.conf.d/50unattended-upgrades.old'
+  end
 when 'fedora'
   package 'yum-cron' do
     action :install
