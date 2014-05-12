@@ -34,6 +34,9 @@ end
 
 case node['platform_family'] 
 when 'debian'
+  package 'apt-utils' do
+    action :install
+  end
   package 'unattended-upgrades' do
     action :install
   end
@@ -44,7 +47,7 @@ when 'debian'
     source 'apt-20auto-upgrades'
     mode 0644
   end
-  ruby_block 'yum-cron-configure' do
+  ruby_block 'ubuntu-unattended-upgrade-configure' do
     block do
       u = 'Unattended-Upgrade::'
       p = '^(//)?' + u
