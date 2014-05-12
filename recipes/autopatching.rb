@@ -77,14 +77,12 @@ when 'debian'
         origins.each() do |o|
           # Uncomment line
           pat = "^(//)?(\\s*\"#{sig}.*#{o}\";)$"
-          puts pat
           file.search_file_replace_line(pat, '\2')
         end
         all_origins.each() do |o|
           if origins.index(o) == nil then
             # Comment out line
             pat = "^(//)?(\\s*\"#{sig}.*#{o}\";)$"
-            puts pat
             file.search_file_replace_line(pat, '//\2')
           end
         end
