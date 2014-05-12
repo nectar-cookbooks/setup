@@ -1,9 +1,13 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.8
+-------------
+ - The autopatching recipe on Ubuntu is failing firts time (#25)
+
 Version 1.1.7
 -------------
- - The autopatching recipe on Ubunto is leaving junk in 'apt.conf.d' (#23)
+ - The autopatching recipe on Ubuntu is leaving junk in 'apt.conf.d' (#23)
 
 Version 1.1.6
 -------------
