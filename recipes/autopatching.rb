@@ -73,12 +73,12 @@ when 'debian'
         sig = "(\\$\\{distro_id}|Ubuntu)"
         origins.each() do |o|
           # Uncomment line
-          file.search_file_replace("^(//)?(\\s*\"#{sig}.*#{o}\")", '\2')
+          file.search_file_replace("^(//)?(\\s*\"#{sig}.*#{o}\")", '\1')
         end
         all_origins.each() do |o|
           if origins.index(o) == nil then
             # Comment out line
-            file.search_file_replace("^(//)?(\\s*\"#{sig}.*#{o}\")", '//\2')
+            file.search_file_replace("^(//)?(\\s*\"#{sig}.*#{o}\")", '//\1')
           end
         end
       end
