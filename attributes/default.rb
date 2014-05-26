@@ -1,7 +1,7 @@
 node.default['setup']['create_users'] = true
 node.default['setup']['mount_dir'] = '/data'
 node.default['setup']['store_ids'] = [] 
-node.default['setup']['nfs_server'] = '10.255.100.50'
+node.default['setup']['nfs_server'] = nil
 
 node.default['setup']['tz'] = nil
 node.default['setup']['set_fqdn'] = nil

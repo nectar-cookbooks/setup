@@ -27,6 +27,8 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+::Chef::Recipe.send(:include, ZoneInfo)
+
 if platform?("redhat", "centos", "fedora", "scientific") then
   package "nfs-utils" do
   end
@@ -137,12 +139,23 @@ if platform?("redhat", "centos", "fedora", "scientific") then
 else
   opts = "-rw,nfsvers=3,hard,intr,bg,nosuid,nodev,timeo=15,retrans=5"
 end
+server_ip = node['setup']['nfs_server']
+unless server_ip
+  zr = ip2ZoneRange(node['ipaddress'])
+  unless zr raise "Host's IP is not in a known NeCTAR zone" 
+  case zr['zone']
+  when 'qld' then server_ip = '10.255.100.50'        # Prentice dc NFS
+  when 'qriscloud' then server_ip = '10.255.120.200' # Polaris dc NFS
+  else raise "Don't know the NFS server IP for zone #{zr['zone']}"
+  end
+end
+    
 template "/etc/auto.qcloud" do
   source "autofs_direct_map.erb"
   mode 0444
   variables ({
     :store_ids => node['setup']['store_ids'],
-    :nfs_server => node['setup']['nfs_server'],
+    :nfs_server => server_ip,
     :mount_dir => node['setup']['mount_dir'],
     :opts => opts
   })
