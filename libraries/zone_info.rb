@@ -63,7 +63,7 @@ module ZoneInfo
   def ip2ZoneRange(ip) 
     ZONE_RANGES.each() do |zi|
       puts "ip = #{ip}, start = #{zi['start']}, end = #{zi['end']}/n"
-      if zi['start'] <=> ip >= 0 and zi['end'] <=> ip <= 0
+      if (zi['start'] <=> ip) >= 0 and (zi['end'] <=> ip) <= 0
         return zi
       end
     end
