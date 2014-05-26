@@ -142,7 +142,8 @@ end
 server_ip = node['setup']['nfs_server']
 unless server_ip
   zr = ip2ZoneRange(node['ipaddress'])
-  unless zr raise "Host's IP is not in a known NeCTAR zone" 
+  unless zr raise "Host's IP is not in a known NeCTAR zone" end
+  
   case zr['zone']
   when 'qld' then server_ip = '10.255.100.50'        # Prentice dc NFS
   when 'qriscloud' then server_ip = '10.255.120.200' # Polaris dc NFS
