@@ -1,6 +1,11 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.9
+-------------
+ - Support RDSI collections in Polaris (#26)
+ - Add library for mapping IP addresses to NeCTAR zones / nodes.
+
 Version 1.1.8
 -------------
  - The autopatching recipe on Ubuntu is failing firts time (#25)
