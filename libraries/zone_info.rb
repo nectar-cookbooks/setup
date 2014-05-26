@@ -62,6 +62,7 @@ module ZoneInfo
   # an IP address.  Return nil if the IP is not in a known NeCTAR zone.
   def ip2ZoneRange(ip) 
     ZONE_RANGES.each() do |zi|
+      puts "ip = #{ip}, start = #{zi['start']}, end = #{zi['end']}/n"
       if zi['start'] >= ip and zi['end'] <= ip
         return zi
       end
