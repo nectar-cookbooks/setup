@@ -1,6 +1,10 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.10
+-------------
+ - Add the heat client to openstack-clients.
+
 Version 1.1.9
 -------------
  - Support RDSI collections in Polaris (#26)
@@ -8,7 +12,7 @@ Version 1.1.9
 
 Version 1.1.8
 -------------
- - The autopatching recipe on Ubuntu is failing firts time (#25)
+ - The autopatching recipe on Ubuntu is failing first time (#25)
 
 Version 1.1.7
 -------------
