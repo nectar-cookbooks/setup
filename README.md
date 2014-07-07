@@ -249,7 +249,8 @@ Recipe - openstack_clients
 
 This recipe installs some commonly used OpenStack clients, and optionally
 configures an RC file containing credentials for this system's NeCTAR
-tenancy.  Currently, we install "nova", "swift" and "keystone".
+tenancy.  Currently, we install "nova", "swift", "keystone", "glance",
+"cinder" and "heat".
 
 The intention is to install and configure clients appropriate for the 
 current NeCTAR platform.
