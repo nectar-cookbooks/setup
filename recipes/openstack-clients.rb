@@ -50,7 +50,7 @@ use_rdo = node['setup']['openstack_use_rdo']
 
 if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
   execute "Configure RDO repo" do
-    code "yum install -y http://rdo.fedorapeople.org/rdo-release.rpm"
+    command "yum install -y http://rdo.fedorapeople.org/rdo-release.rpm"
   end
 end
 
