@@ -46,6 +46,13 @@ deps.each do |pkg|
 end
 try_distro = node['setup']['openstack_try_distro']
 try_pip = node['setup']['openstack_try_pip']
+use_rdo = node['setup']['openstack_use_rdo']
+
+if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
+  execute "Configure RDO repo" do
+    code "yum install -y http://rdo.fedorapeople.org/rdo-release.rpm"
+  end
+end
 
 clients = [['keystone', 'python-keystoneclient'],
            ['swift', 'python-swiftclient'], 
