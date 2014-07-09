@@ -38,9 +38,19 @@ if node['setup']['set_fqdn'] then
   include_recipe 'setup::set_hostname'
 end
 
-# Workaround for issue #13 ... until I can get the offending recipe fixed.
-if platform_family?('rhel', 'debian') then
-  include_recipe 'locale'
+if platform_family?('rhel', 'fedora') then
+  # Various NeCTAR images don't drop a config file for eth1 into 
+  # /etc/sysconfig/network-scripts/.  If your virtual has an eth1 NIC, and
+  # you install certain versions of NetworkManager (e.g. as part of an X11
+  # installation), it gets really confused and routes traffic to the wrong
+  # interface ... which effectively kills networking.
+  template '/etc/sysconfig/network-script/ifcfg-eth1' do
+    source 'ifcfg-xxx.erb'
+    variables ({ :device => 'eth1', 
+                 :private => true
+                 })
+    action :create_if_missing
+  end
 end
 
 if node['setup']['accounts'] &&
