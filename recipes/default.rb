@@ -44,7 +44,7 @@ if platform_family?('rhel', 'fedora') then
   # you install certain versions of NetworkManager (e.g. as part of an X11
   # installation), it gets really confused and routes traffic to the wrong
   # interface ... which effectively kills networking.
-  template '/etc/sysconfig/network-script/ifcfg-eth1' do
+  template '/etc/sysconfig/network-scripts/ifcfg-eth1' do
     source 'ifcfg-xxx.erb'
     variables ({ :device => 'eth1', 
                  :private => true
