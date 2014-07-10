@@ -32,16 +32,29 @@ try_pip = node['setup']['openstack_try_pip']
 use_rdo = node['setup']['openstack_use_rdo']
 
 if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
-  base = 'https://repos.fedorapeople.org/repos/openstack' 
+  base = 'http://repos.fedorapeople.org/repos/openstack' 
   release = node['setup']['openstack_release']
   if platform_family?('fedora')
     platform = "fedora-#{node['platform_version']}"
+    name = "Fedora-#{node['platform_version']}"
   else
-    platform = "epel-#{node['platform_version'] =~ /(\d)\.(\d)/}"
+    version = /(\d+)\.\d+/.match(node['platform_version'])[1]
+    platform = "epel-#{version}"
+    name = "EPEL #{version}"
+  end
+
+  baseurl = "#{base}/openstack-#{release}/#{platform}/"
+  bash "test #{base_url}" do
+    command "curl -I #{base_url} -o /dev/null"
+    notifies :create, "yum_repository[openstack-#{release}]", :immediately
   end
   yum_repository "openstack-#{release}" do
-    description "Openstack #{release} - RDO"
-    baseurl "#{base}/openstack-#{release}/#{platform}"
+    description "Openstack #{release} - RDO (#{name})"
+    baseurl baseurl
+    enabled true
+    gpgcheck false
+    priority 98
+    action :nothing
   end
 end
 
