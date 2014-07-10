@@ -39,9 +39,9 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
   else
     platform = "epel-#{node['platform_version'] =~ /(\d)\.(\d)/}"
   end
-  yum_repository 'openstack-#{release}' do
-    description 'Openstack #{release} - RDO'
-    baseurl '#{base}/openstack-#{release}/#{platform}'
+  yum_repository "openstack-#{release}" do
+    description "Openstack #{release} - RDO"
+    baseurl "#{base}/openstack-#{release}/#{platform}"
   end
 end
 
