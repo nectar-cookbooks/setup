@@ -27,9 +27,23 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Simply install the distro-supplied versions for now.  (Some sources imply
-# that there are version compatibility issues, and recommend building and
-# installing from source.  I'm not convinced ...)
+try_distro = node['setup']['openstack_try_distro']
+try_pip = node['setup']['openstack_try_pip']
+use_rdo = node['setup']['openstack_use_rdo']
+
+if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
+  base = 'https://repos.fedorapeople.org/repos/openstack' 
+  release = node['setup']['openstack_release']
+  if platform_family?('fedora')
+    platform = "fedora-#{node['platform_version']}"
+  else
+    platform = "epel-#{node['platform_version'] =~ /(\d)\.(\d)/}"
+  end
+  yum_repository 'openstack-#{release}' do
+    description 'Openstack #{release} - RDO'
+    baseurl '#{base}/openstack-#{release}/#{platform}'
+  end
+end
 
 # Build dependencies for the python clients ... in case we need them.
 if platform_family?('debian') then
@@ -42,15 +56,6 @@ end
 deps.each do |pkg|
   package pkg do
     action :install
-  end
-end
-try_distro = node['setup']['openstack_try_distro']
-try_pip = node['setup']['openstack_try_pip']
-use_rdo = node['setup']['openstack_use_rdo']
-
-if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
-  execute "Configure RDO repo" do
-    command "yum install -y http://rdo.fedorapeople.org/rdo-release.rpm"
   end
 end
 
