@@ -46,16 +46,19 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
 end
 
 # Build dependencies for the python clients ... in case we need them.
-if platform_family?('debian') then
-  deps = ['python-pip', 'build-essential',
-          'libssl-dev', 'libffi-dev', 'python-dev']
-else
-  deps = ['python-pip', 'gcc', 'openssl-devel', 'libffi-devel', 'python-devel']
-end
-
-deps.each do |pkg|
-  package pkg do
-    action :install
+if try_pip then
+  if platform_family?('debian') then
+    deps = ['python-pip', 'build-essential',
+            'libssl-dev', 'libffi-dev', 'python-dev']
+  else
+    deps = ['python-pip', 'gcc', 'openssl-devel', 'libffi-devel', 
+            'python-devel']
+  end
+  
+  deps.each do |pkg|
+    package pkg do
+      action :install
+    end
   end
 end
 
@@ -70,7 +73,7 @@ clients.each do |client|
   if try_distro then
     package client[1] do
       action :install
-      ignore_failure true
+      ignore_failure try_pip
       not_if "which #{client[0]}"
     end
   end
