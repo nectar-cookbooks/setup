@@ -59,7 +59,7 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
         status = res.code.to_i
         case status
         when 404
-          Chef::Log.warning("There is no RDO repo for #{release} on #{platform}")
+          Chef::Log.warn("There is no RDO repo for #{release} on #{platform}")
           break;
         when 400..499, 500..599
           raise "HTTP Request failed: #{status} #{res.message}: for #{url}"
