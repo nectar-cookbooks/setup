@@ -53,7 +53,7 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
     baseurl baseurl
     enabled true
     gpgcheck false
-    priority 98
+    priority '98'
     action :nothing
   end
 end
