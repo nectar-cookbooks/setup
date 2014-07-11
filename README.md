@@ -267,6 +267,7 @@ Attributes
 * `node['setup']['openstack_rc_group']` - The owner of the credentials script.  Defaults to 'root'.
 * `node['setup']['openstack_try_pip']` - If true, try to install clients from Pypy, using pip.  Defaults to true.
 * `node['setup']['openstack_try_distro']` - If true, try to install clients from the distro's repository.  Defaults to false.
+* `node['setup']['openstack_use_rdo']` - If true, try to use the Fedora "RDO" repository in preference to the distro's.  Defaults to false.
 
 If the 'openstack_tenant_name' attribute is defined and non-empty, then a 
 credentials file will be generated containing the details.
@@ -277,6 +278,13 @@ risky, since you can get interoperability issues.  (For example on Ubuntu
 Precise, there is no Swift client in the package repo, and the Pypy version
 of the Swift client in incompatible with the Ubuntu precise version of the
 Keystone client.) 
+
+The RDO repos are maintained by the RDO community 
+(http://openstack.redhat.com/Main_Page) and aim to provide up-to-date 
+builds of OpenStack related "stuff" for Fedora and RHEL-based systems.
+Unfortunately, they don't provide complete coverage, so the 'openstack_clients'
+recipe is designed to try to use an RDO repo if it exists, and fall back to
+the standard distro (with a WARN log message).
 
 The credentials script is created with permissions `0550`, and defaults to 
 having "root:root" ownership.
