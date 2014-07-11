@@ -38,9 +38,20 @@ if node['setup']['set_fqdn'] then
   include_recipe 'setup::set_hostname'
 end
 
-# Workaround for issue #13 ... until I can get the offending recipe fixed.
-if platform_family?('rhel', 'debian') then
-  include_recipe 'locale'
+if platform_family?('rhel', 'fedora') then
+  # Block the accidental installation of NetworkManager (typically
+  # as part of an X11 install ...) because it tends to mess up OpenStack
+  # networking.
+  yum_globalconfig '/etc/yum.conf' do
+    keepcache false
+    debuglevel '2'
+    exactarch true
+    obsoletes true
+    gpgcheck true
+    plugins true
+    installonly_limit '3'
+    exclude 'NetworkManager*'
+  end
 end
 
 if node['setup']['accounts'] &&

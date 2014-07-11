@@ -1,6 +1,11 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.11
+-------------
+ - Avoid issue where installing NetManager will brick networking (#29)
+ - Add support for installing openstack clients from the Fedora RDO repo.
+
 Version 1.1.10
 -------------
  - Add the heat client to openstack-clients.

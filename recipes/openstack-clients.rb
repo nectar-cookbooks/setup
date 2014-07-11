@@ -27,25 +27,81 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Simply install the distro-supplied versions for now.  (Some sources imply
-# that there are version compatibility issues, and recommend building and
-# installing from source.  I'm not convinced ...)
-
-# Build dependencies for the python clients ... in case we need them.
-if platform_family?('debian') then
-  deps = ['python-pip', 'build-essential',
-          'libssl-dev', 'libffi-dev', 'python-dev']
-else
-  deps = ['python-pip', 'gcc', 'openssl-devel', 'libffi-devel', 'python-devel']
-end
-
-deps.each do |pkg|
-  package pkg do
-    action :install
-  end
-end
 try_distro = node['setup']['openstack_try_distro']
 try_pip = node['setup']['openstack_try_pip']
+use_rdo = node['setup']['openstack_use_rdo']
+
+if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
+  base = 'http://repos.fedorapeople.org/repos/openstack' 
+  release = node['setup']['openstack_release']
+  if platform_family?('fedora')
+    platform = "fedora-#{node['platform_version']}"
+    name = "Fedora-#{node['platform_version']}"
+  else
+    version = /(\d+)\.\d+/.match(node['platform_version'])[1]
+    platform = "epel-#{version}"
+    name = "EPEL #{version}"
+  end
+
+  baseurl = "#{base}/openstack-#{release}/#{platform}/"
+  # Test to see if the intuited RDO repo URL is viable.
+  found_rdo = false
+  begin
+    redirects = 0
+    url_string = baseurl
+    while true do
+      raise "Redirection loop for #{url}" if redirects >= 20
+      url = URI.parse(url_string)
+      req = Net::HTTP.new(url.host, url.port)
+      req.use_ssl = (url.scheme == 'https')
+      res = req.request_head(url.path || "/")
+      if (! res.kind_of?(Net::HTTPRedirection) ) then
+        status = res.code.to_i
+        case status
+        when 404
+          Chef::Log.warn("There is no RDO repo for #{release} on #{platform}")
+          break;
+        when 400..499, 500..599
+          raise "HTTP Request failed: #{status} #{res.message}: for #{url}"
+        when 200..299
+          found_rdo = true
+          break;
+        when true
+          raise "Unexpected HTTP response: #{status} #{res.message}: for #{url}"
+        end
+      end
+      url_string = res['location']
+    end
+  rescue Errno::ENOENT
+    raise "Unexpected problem with url #{url_string}"
+  end
+  if found_rdo then
+    yum_repository "openstack-#{release}" do
+      description "Openstack #{release} - RDO (#{name})"
+      baseurl baseurl
+      enabled true
+      gpgcheck false
+      priority '98'
+    end
+  end
+end
+
+# Build dependencies for the python clients ... in case we need them.
+if try_pip then
+  if platform_family?('debian') then
+    deps = ['python-pip', 'build-essential',
+            'libssl-dev', 'libffi-dev', 'python-dev']
+  else
+    deps = ['python-pip', 'gcc', 'openssl-devel', 'libffi-devel', 
+            'python-devel']
+  end
+  
+  deps.each do |pkg|
+    package pkg do
+      action :install
+    end
+  end
+end
 
 clients = [['keystone', 'python-keystoneclient'],
            ['swift', 'python-swiftclient'], 
@@ -58,7 +114,7 @@ clients.each do |client|
   if try_distro then
     package client[1] do
       action :install
-      ignore_failure true
+      ignore_failure try_pip
       not_if "which #{client[0]}"
     end
   end
