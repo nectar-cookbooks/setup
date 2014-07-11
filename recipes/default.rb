@@ -39,17 +39,18 @@ if node['setup']['set_fqdn'] then
 end
 
 if platform_family?('rhel', 'fedora') then
-  # Various NeCTAR images don't drop a config file for eth1 into 
-  # /etc/sysconfig/network-scripts/.  If your virtual has an eth1 NIC, and
-  # you install certain versions of NetworkManager (e.g. as part of an X11
-  # installation), it gets really confused and routes traffic to the wrong
-  # interface ... which effectively kills networking.
-  template '/etc/sysconfig/network-scripts/ifcfg-eth1' do
-    source 'ifcfg-xxx.erb'
-    variables ({ :device => 'eth1', 
-                 :private => true
-                 })
-    action :create_if_missing
+  # Block the accidental installation of NetworkManager (typically
+  # as part of an X11 install ...) because it tends to mess up OpenStack
+  # networking.
+  yum_globalconfig '/etc/yum.conf' do
+    keepcache false
+    debuglevel '2'
+    exactarch true
+    obsoletes true
+    gpgcheck true
+    plugins true
+    installonly_limit '3'
+    exclude 'NetworkManager*'
   end
 end
 
