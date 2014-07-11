@@ -53,8 +53,7 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
       url = URI.parse(url_string)
       req = Net::HTTP.new(url.host, url.port)
       req.use_ssl = (url.scheme == 'https')
-      path = url.path if url.path.present?
-      res = req.request_head(path || '/')
+      res = req.request_head(url.path || "/")
       if (! res.kind_of?(Net::HTTPRedirection) ) then
         status = res.code.to_i
         case status
