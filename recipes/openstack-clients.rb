@@ -45,6 +45,7 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
 
   baseurl = "#{base}/openstack-#{release}/#{platform}/"
   http_request "test #{baseurl}" do
+    message ""
     url baseurl
     action :head
     notifies :create, "yum_repository[openstack-#{release}]", :immediately
