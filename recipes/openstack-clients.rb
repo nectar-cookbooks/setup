@@ -44,12 +44,34 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
   end
 
   baseurl = "#{base}/openstack-#{release}/#{platform}/"
-  http_request "test #{baseurl}" do
-    message ""
-    url baseurl
-    action :head
-    ignore_failure true
-    notifies :create, "yum_repository[openstack-#{release}]", :immediately
+  # Test to see if the intuited RDO repo URL is viable.
+  begin
+    redirects = 0
+    url_string = baseurl
+    while true do
+      raise "Redirection loop for #{url}" if redirects >= 20
+      url = URI.parse(url_string)
+      req = Net::HTTP.new(url.host, url.port)
+      req.use_ssl = (url.scheme == 'https')
+      path = url.path if url.path.present?
+      res = req.request_head(path || '/')
+      if (! res.kind_of?(Net::HTTPRedirection) ) then
+        status = res.code.to_i
+        case status
+        when 404
+          raise "There is no RDO repo for #{release} on #{platform}"
+        when 400..499, 500..599
+          raise "HTTP Request failed: #{status} #{res.message}: for #{url}"
+        when 200..299
+          break;
+        when true
+          raise "Unexpected HTTP response: #{status} #{res.message}: for #{url}"
+        end
+      end
+      url_string = res['location']
+    end
+  rescue Errno::ENOENT
+    raise "Unexpected problem with url #{url_string}"
   end
   yum_repository "openstack-#{release}" do
     description "Openstack #{release} - RDO (#{name})"
@@ -57,7 +79,6 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
     enabled true
     gpgcheck false
     priority '98'
-    action :nothing
   end
 end
 
