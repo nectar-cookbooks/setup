@@ -44,8 +44,8 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
   end
 
   baseurl = "#{base}/openstack-#{release}/#{platform}/"
-  bash "test #{base_url}" do
-    command "curl -I #{base_url} -o /dev/null"
+  bash "test #{baseurl}" do
+    command "curl -I #{baseurl} -o /dev/null"
     notifies :create, "yum_repository[openstack-#{release}]", :immediately
   end
   yum_repository "openstack-#{release}" do
