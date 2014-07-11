@@ -45,6 +45,7 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
 
   baseurl = "#{base}/openstack-#{release}/#{platform}/"
   # Test to see if the intuited RDO repo URL is viable.
+  found_rdo = false
   begin
     redirects = 0
     url_string = baseurl
@@ -58,10 +59,12 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
         status = res.code.to_i
         case status
         when 404
-          raise "There is no RDO repo for #{release} on #{platform}"
+          Chef::Log.warning("There is no RDO repo for #{release} on #{platform}")
+          break;
         when 400..499, 500..599
           raise "HTTP Request failed: #{status} #{res.message}: for #{url}"
         when 200..299
+          found_rdo = true
           break;
         when true
           raise "Unexpected HTTP response: #{status} #{res.message}: for #{url}"
@@ -72,12 +75,14 @@ if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
   rescue Errno::ENOENT
     raise "Unexpected problem with url #{url_string}"
   end
-  yum_repository "openstack-#{release}" do
-    description "Openstack #{release} - RDO (#{name})"
-    baseurl baseurl
-    enabled true
-    gpgcheck false
-    priority '98'
+  if found_rdo then
+    yum_repository "openstack-#{release}" do
+      description "Openstack #{release} - RDO (#{name})"
+      baseurl baseurl
+      enabled true
+      gpgcheck false
+      priority '98'
+    end
   end
 end
 
