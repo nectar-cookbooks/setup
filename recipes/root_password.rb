@@ -32,7 +32,7 @@
 #   - 'override' : set the root password unconditionally
 #   - 'default' : set the root password if currently unset
 #   - 'require_set' : fail if the root password is unset.
-action = node['setup']['root_password_action']
+password_action = node['setup']['root_password_action']
 
 # Supplies the value to be set (if any).
 password_hash = node['setup']['root_password_hash']
@@ -41,14 +41,15 @@ password_hash = node['setup']['root_password_hash']
 # currently set, etcetera
 root_line = /^root:.*$/.match(IO.read('/etc/shadow'))
 raise "No shadow password entry for 'root' !?!" unless root_line
+Chef::Log.warn("root_line[0] is #{root_line[0])")
 current_password = /root:([~:]+):.+/.match(root_line[0])[1]
 
 is_unset = current_password == ""
-is_set = /^[a-zA-Z1-9.]{13}$/.match(current_password) ||    # classic DES
-         /^\$[~$]+\$[~$]+\$[~$]+$/.match(current_password)  # glibc2 extensions
+is_set = ( /^[a-zA-Z1-9.]{13}$/.match(current_password) ||      # classic DES
+           /^\$[~$]+\$[~$]+\$[~$]+$/.match(current_password) )  # glibc2 extensions
 is_disabled = !is_set && !is_unset
 
-case action
+case password_action
 when 'ignore'
   Chef::Log.warn('NB: No root password is set.  Your system is insecure!')
 when 'override'
@@ -58,15 +59,15 @@ when 'default'
 when 'require_set'
   raise 'The root password has not been set yet.  Use "passwd root" to set the system password, then rerun chef.'
 else
-  raise "Unknown action #{action}"
+  raise "Unknown 'root_password_action' #{password_action}"
 end
     
 if set_password then
   if !password_hash || password_hash == "" then
     raise 'A "root_password_hash" attribute is required.  Use "openssl passwd ..." or "mkpasswd ..." to create the hash, and add it to the attributes.  Alternatively, use "X" to disable the root password.'
   end
-  will_set = /^[a-zA-Z1-9.]{13}$/.match(password_hash) ||
-    /^\$[~$]+\$[~$]+\$[~$]+$/.match(password_hash)
+  will_set = ( /^[a-zA-Z1-9.]{13}$/.match(password_hash) ||
+               /^\$[~$]+\$[~$]+\$[~$]+$/.match(password_hash) )
   user "#{will_set ? 'set' : 'disable'} root password" do
     username 'root'
     password password_hash
