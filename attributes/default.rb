@@ -44,3 +44,6 @@ node.default['setup']['accounts']['admin_user'] = nil
 node.default['setup']['accounts']['sysadmin_group_sudo'] = false
 node.default['setup']['accounts']['sysadmin_group_id'] = nil
 node.default['setup']['accounts']['create_users'] = false
+
+node.default['setup']['root_password_hash'] = 'X'
+node.default['setup']['root_password_action'] = 'default'
