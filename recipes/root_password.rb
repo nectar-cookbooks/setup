@@ -68,8 +68,8 @@ if set_password then
   will_set = /^[a-zA-Z1-9.]{13}$/.match(password_hash) ||
              /^\$[~$]+\$[~$]+\$[~$]+$/.match(password_hash)
   user "#{will_set ? 'set' : 'disable'} root password" do
-    action :modify
     username 'root'
-    password password
+    password password_hash
+    action :modify
   end
 end
