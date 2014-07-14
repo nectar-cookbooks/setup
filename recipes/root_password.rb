@@ -49,16 +49,16 @@ is_set = /^[a-zA-Z1-9.]{13}$/.match(current_password) ||    # classic DES
 is_disabled = !is_set && !is_unset
 
 case action
-  when 'ignore'
-     Chef::Log.warn('NB: No root password is set.  Your system is insecure!')
-  when 'override'
-     set_password = true
-  when 'default'
-     set_password = is_unset
-  when 'require_set'
-     raise 'The root password has not been set yet.  Use "passwd root" to set the system password, then rerun chef.'
-  else
-     raise "Unknown action #{action}"
+when 'ignore'
+  Chef::Log.warn('NB: No root password is set.  Your system is insecure!')
+when 'override'
+  set_password = true
+when 'default'
+  set_password = is_unset
+when 'require_set'
+  raise 'The root password has not been set yet.  Use "passwd root" to set the system password, then rerun chef.'
+else
+  raise "Unknown action #{action}"
 end
     
 if set_password then
@@ -66,7 +66,7 @@ if set_password then
     raise 'A "root_password_hash" attribute is required.  Use "openssl passwd ..." or "mkpasswd ..." to create the hash, and add it to the attributes.  Alternatively, use "X" to disable the root password.'
   end
   will_set = /^[a-zA-Z1-9.]{13}$/.match(password_hash) ||
-             /^\$[~$]+\$[~$]+\$[~$]+$/.match(password_hash)
+    /^\$[~$]+\$[~$]+\$[~$]+$/.match(password_hash)
   user "#{will_set ? 'set' : 'disable'} root password" do
     username 'root'
     password password_hash
