@@ -1,6 +1,10 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.1.12
+--------------
+ - Added a recipe to manage the root password.
+
 Version 1.1.11
 -------------
  - Avoid issue where installing NetManager will brick networking (#29)

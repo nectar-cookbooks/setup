@@ -15,6 +15,7 @@ The "setup::default" recipe does some simple configuration that typically needs 
 * setting the hostname and creating /etc/hosts entries
 * setting the timezone and locale,
 * configure privileged user accounts and the sudoers file,
+* setting and/or checking the root password,
 * configuring a root mail aliases and relaying,
 * configuring automatic patching
 * configuring logfile scanning
@@ -34,6 +35,8 @@ Attributes:
 * `node['setup']['apply_patches']` - This determines whether / how we configure auto-patching.  The standard values are "all", "security" and "none".  The default is "all".  (See the "autopatching" documentation below.)
 * `node['setup']['antivirus']` - This determines whether or not we configure ClamAV for virus checking.  If the attribute is truthy, "clamav" recipe (described below) is run.  The default is false.
 * `node['setup']['openstack_clients']` - This determines whether or not we install OpenStack clients and credentials.  The default is false.
+* `node['setup']['root_password_action']` - Controls what the "root_password" recipe does.  Possible values are 'require_set', 'override', 'default', 'disable' and 'ignore'.  See the recipe documentation below for details.  The default is 'require_set'.
+* `node['setup']['root_password_hash']` - Provides root password value hash, suitable for using in the "shadow" password file..  See the recipe documentation below for details.  The default is 'require_set'.
 
 Note: current scheme for provisioning a NeCTAR node may leave your virtual
 with an invalid hostname.  Using 'set_fqdn' with the value "*" fixes this the first time you run chef-client or chef-solo.  However, this might be "too late" for other recipes.  (The simple way to deal with this is to run just the "setup::default" recipe on a newly provisioned node before adding other recipes to the node's run-list.)
@@ -161,6 +164,32 @@ that the "groups" attribute behaves like the "groups" attribute on the
 "user" resource, and the user is added to all of those groups.  In fact, the
 "user_manage" resource only adds the newly created user to the group we are
 selecting; i.e. "sysadmin".
+
+Recipe - root_password
+======================
+
+Checks and sets the root password for the system.
+
+Under certain circumstances, it is possible for a freshly launched NeCTAR 
+instance to have no root password set.  This is significant security risk, so
+we have decided that the best thing to do is to force the administrator to
+do something about it; i.e. either set a root password, or disable it.
+
+The behaviour of this recipe is controlled by the 'root_password_action' 
+attribute, which takes the following values:
+
+* 'require_set' - this checks that the root password is either set or disabled, 
+  and aborts the Chef run the password is unset.
+* 'default' - if the root password is unset, this sets it using the provided
+  'root_password_hash' value.  A non-empty value must be available if it is
+  required, or the recipe aborts.
+* 'override' - this unconditionally sets the root password using the provided
+  'root_password_hash' value.  A non-empty value must be provided, or the 
+   recipe aborts.
+* 'disable' - this unconditionally disables the root password.
+* 'ignore' - this allows the recipe to continue without setting a root 
+  password.  However, it does output an ERROR log message in an attempt to
+  alert you to the security problem you have created.
 
 Recipe - logwatch
 =================
