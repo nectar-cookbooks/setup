@@ -79,4 +79,9 @@ if set_password then
     password password_hash
     action :modify
   end
+else 
+  state = is_set ? 'set' : (is_unset ? 'unset' : 'disabled')
+  log "Root password is currently #{state}" do
+    level :info
+  end
 end
