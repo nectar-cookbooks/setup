@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: setup
-# Recipe:: rootmail
+# Recipe:: root_email
 #
 # Copyright (c) 2013, 2014, The University of Queensland
 # All rights reserved.

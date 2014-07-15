@@ -1,6 +1,12 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.2
+-----------
+ - Renamed rootmail recipe to root_email
+ - Renamed openstack-clients recipe to openstack_clients
+ - Restructured the openstack and root_password attributes
+
 Version 1.1.12
 --------------
  - Added a recipe to manage the root password.
