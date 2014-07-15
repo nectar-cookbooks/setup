@@ -52,7 +52,7 @@ is_disabled = !is_set && !is_unset
 
 case password_action
 when 'ignore'
-  Chef::Log.warn('NB: No root password is set.  Your system is insecure!')
+  Chef::Log.error('NB: No root password is set.  Your system is insecure!')
 when 'override'
   set_password = true
 when 'default'
