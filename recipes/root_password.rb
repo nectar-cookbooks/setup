@@ -41,8 +41,7 @@ password_hash = node['setup']['root_password_hash']
 # Poke around in the shadow password file to see if a root password is
 # currently set, etcetera
 root_line = /^root:.*$/.match(IO.read('/etc/shadow'))
-raise "No shadow password entry for 'root' !?!" unless root_line
-Chef::Log.warn("root_line[0] is #{root_line[0]}")
+raise "No shadow password entry found for 'root' !?!" unless root_line
 current_password = /root:([^:]*):.+/.match(root_line[0])[1]
 
 is_unset = current_password == ""
