@@ -33,7 +33,7 @@
 #   - 'default' : set the root password if currently unset
 #   - 'disable' : disable the root password
 #   - 'require_set' : fail if the root password is unset.
-password_action = node['setup']['root_password_action']
+password_action = node['setup']['root_password_action'] || 'ignore'
 
 # Supplies the value to be set (if any).
 password_hash = node['setup']['root_password_hash']
