@@ -64,7 +64,7 @@ end
 include_recipe 'setup::root_password'
 
 if node['setup']['root_email'] then
-  include_recipe 'setup::rootmail'
+  include_recipe 'setup::root_email'
 end
 
 if node['setup']['logwatch'] then
@@ -83,6 +83,6 @@ if node['setup']['antivirus'] then
   include_recipe 'setup::clamav'
 end
 
-if node['setup']['openstack_clients'] then
-  include_recipe 'setup::openstack-clients'
+if node['setup']['openstack']['clients'] then
+  include_recipe 'setup::openstack_clients'
 end

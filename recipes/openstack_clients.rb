@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: setup
-# Recipe:: openstack-clients
+# Recipe:: openstack_clients
 #
 # Copyright (c) 2014, The University of Queensland
 # All rights reserved.
@@ -27,13 +27,17 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-try_distro = node['setup']['openstack_try_distro']
-try_pip = node['setup']['openstack_try_pip']
-use_rdo = node['setup']['openstack_use_rdo']
+if node['setup']['openstack_clients'] then
+  raise "The old 'openstack_*' attributes in your node descriptor need to be replaced"
+end
+
+try_distro = node['setup']['openstack']['try_distro']
+try_pip = node['setup']['openstack']['try_pip']
+use_rdo = node['setup']['openstack']['use_rdo']
+release = node['setup']['openstack']['release']
 
 if try_distro && use_rdo && platform_family?('rhel', 'fedora') then
   base = 'http://repos.fedorapeople.org/repos/openstack' 
-  release = node['setup']['openstack_release']
   if platform_family?('fedora')
     platform = "fedora-#{node['platform_version']}"
     name = "Fedora-#{node['platform_version']}"
@@ -127,14 +131,14 @@ clients.each do |client|
   end
 end
 
-os_tenant_name = node['setup']['openstack_tenant_name']
-os_tenant_id = node['setup']['openstack_tenant_id']
-os_auth_url = node['setup']['openstack_auth_url']
-os_username = node['setup']['openstack_username']
-os_password = node['setup']['openstack_password']
-os_rc_path = node['setup']['openstack_rc_path']
-os_rc_user = node['setup']['openstack_rc_user'] || 'root'
-os_rc_group = node['setup']['openstack_rc_group'] || 'root'
+os_tenant_name = node['setup']['openstack']['tenant_name']
+os_tenant_id = node['setup']['openstack']['tenant_id']
+os_auth_url = node['setup']['openstack']['auth_url']
+os_username = node['setup']['openstack']['username']
+os_password = node['setup']['openstack']['password']
+os_rc_path = node['setup']['openstack']['rc_path']
+os_rc_user = node['setup']['openstack']['rc_user'] || 'root'
+os_rc_group = node['setup']['openstack']['rc_group'] || 'root'
 
 if os_tenant_name then
   # If we are use the default rc path, automatically create the parent dir 

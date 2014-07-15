@@ -8,7 +8,6 @@ node.default['setup']['set_fqdn'] = nil
 node.default['setup']['root_email'] = nil
 node.default['setup']['mail_relay'] = nil
 node.default['setup']['apply_patches'] = 'all'
-node.default['setup']['openstack_clients'] = false
 node.default['setup']['antivirus'] = false
 
 node.default['setup']['clamscan']['args'] = '--quiet -r'  
@@ -23,20 +22,21 @@ node.default['setup']['clamscan']['schedule'] = ['10', '2', '*', '*', '*']
 node.normal['clamav']['clamd']['enabled'] = true
 node.normal['clamav']['freshclam']['enabled'] = true
 
-node.default['setup']['openstack_rc_path'] = '/etc/openstack/authrc.sh'
-node.default['setup']['openstack_rc_user'] = 'root'
-node.default['setup']['openstack_rc_group'] = 'root'
-node.default['setup']['openstack_auth_url'] =
+node.default['setup']['openstack']['clients'] = false
+node.default['setup']['openstack']['rc_path'] = '/etc/openstack/authrc.sh'
+node.default['setup']['openstack']['rc_user'] = 'root'
+node.default['setup']['openstack']['rc_group'] = 'root'
+node.default['setup']['openstack']['auth_url'] =
   'https://keystone.rc.nectar.org.au:5000/v2.0/'
-node.default['setup']['openstack_auth_version'] = 2
-node.default['setup']['openstack_username'] = nil
-node.default['setup']['openstack_password'] = nil
-node.default['setup']['openstack_tenant_name'] = nil 
-node.default['setup']['openstack_tenant_id'] = nil
-node.default['setup']['openstack_try_pip'] = true
-node.default['setup']['openstack_try_distro'] = false
-node.default['setup']['openstack_use_rdo'] = false
-node.default['setup']['openstack_release'] = 'havana'
+node.default['setup']['openstack']['auth_version'] = 2
+node.default['setup']['openstack']['username'] = nil
+node.default['setup']['openstack']['password'] = nil
+node.default['setup']['openstack']['tenant_name'] = nil 
+node.default['setup']['openstack']['tenant_id'] = nil
+node.default['setup']['openstack']['try_pip'] = true
+node.default['setup']['openstack']['try_distro'] = false
+node.default['setup']['openstack']['use_rdo'] = false
+node.default['setup']['openstack']['release'] = 'havana'
 
 node.default['setup']['accounts']['generate_sudoers'] = false
 node.default['setup']['accounts']['sysadmin_passwordless'] = false
@@ -45,5 +45,12 @@ node.default['setup']['accounts']['sysadmin_group_sudo'] = false
 node.default['setup']['accounts']['sysadmin_group_id'] = nil
 node.default['setup']['accounts']['create_users'] = false
 
-node.default['setup']['root_password_hash'] = nil
-node.default['setup']['root_password_action'] = 'require_set'
+node.default['setup']['root_password']['hash'] = nil
+
+# Action values are:
+#   - 'ignore' : do nothing
+#   - 'override' : set the root password unconditionally
+#   - 'default' : set the root password if currently unset
+#   - 'disable' : disable the root password
+#   - 'require_set' : fail if the root password is unset.
+node.default['setup']['root_password']['action'] = 'require_set'

@@ -1,11 +1,17 @@
 Overview
 ========
 
-This cookbook contains some recipes for basic configuration of NeCTAR virtuals
+This cookbook contains recipes for basic configuration of NeCTAR virtuals.
 
-The "setup" recipe and its child recipes have been tested on virtuals running NeCTAR CentOS 6.4 and Ubuntu 13.04 images.  There is an expectation that they will also work on other recent RHEL / CentOS / Scientific Linux and Ubuntu / Debian distros.
+The "setup" recipe and its child recipes have been tested on virtuals running 
+NeCTAR CentOS 6.4, Ubuntu 13.04 and Fedora 20 images.  There is an expectation 
+that they will also work on other recent RHEL / CentOS / Scientific Linux,
+Ubuntu / Debian, and Fedora distros.
 
-The "mount_rdsi_collections" recipe is QCloud / QRISCloud specific.  (I don't have details about how RDSI Collection mounts would be implemented on other Nodes.)
+The "mount_rdsi_collections" recipe is QCloud / QRISCloud specific.  (I don't 
+have details about how NFS mounts of RDSI collections would be implemented 
+in other availability zones.  Indeed, I suspect that it may not be supported 
+at all.)
 
 Recipe - "default"
 ================
@@ -20,7 +26,7 @@ The "setup::default" recipe does some simple configuration that typically needs 
 * configuring automatic patching
 * configuring logfile scanning
 * configuring anti-virus software and scanning
-* installing OpenStack clients and configure credentials
+* installing OpenStack clients and configuring credentials
 
 Attributes:
 -----------
@@ -34,9 +40,9 @@ Attributes:
 * `node['setup']['logwatch']` - If true, run the standard Opscode logwatch recipe.  Refer to https://github.com/opscode-cookbooks/logwatch for details of the attributes.
 * `node['setup']['apply_patches']` - This determines whether / how we configure auto-patching.  The standard values are "all", "security" and "none".  The default is "all".  (See the "autopatching" documentation below.)
 * `node['setup']['antivirus']` - This determines whether or not we configure ClamAV for virus checking.  If the attribute is truthy, "clamav" recipe (described below) is run.  The default is false.
-* `node['setup']['openstack_clients']` - This determines whether or not we install OpenStack clients and credentials.  The default is false.
-* `node['setup']['root_password_action']` - Controls what the "root_password" recipe does.  Possible values are 'require_set', 'override', 'default', 'disable' and 'ignore'.  See the recipe documentation below for details.  The default is 'require_set'.
-* `node['setup']['root_password_hash']` - Provides root password value hash, suitable for using in the "shadow" password file..  See the recipe documentation below for details.  The default is 'require_set'.
+* `node['setup']['openstack']['clients']` - This determines whether or not we install OpenStack clients and credentials.  The default is false.
+* `node['setup']['root_password']['action']` - Controls what the "root_password" recipe does.  Possible values are 'require_set', 'override', 'default', 'disable' and 'ignore'.  See the recipe documentation below for details.  The default is 'require_set'.
+* `node['setup']['root_password']['hash']` - Provides root password value hash, suitable for using in the "shadow" password file..  See the recipe documentation below for details.  The default is 'require_set'.
 
 Note: current scheme for provisioning a NeCTAR node may leave your virtual
 with an invalid hostname.  Using 'set_fqdn' with the value "*" fixes this the first time you run chef-client or chef-solo.  However, this might be "too late" for other recipes.  (The simple way to deal with this is to run just the "setup::default" recipe on a newly provisioned node before adding other recipes to the node's run-list.)
@@ -201,7 +207,7 @@ Recipe - mail_relay
 
 Configures the mail relay.  The current implementation is hard-wired to uses Postfix. See above for other details.
 
-Recipe - rootmail
+Recipe - root_email
 =================
 
 Add or remove a mail alias for the "root" mail address. See above for details.
@@ -287,22 +293,22 @@ current NeCTAR platform.
 Attributes
 ----------
 
-* `node['setup']['openstack_tenant_name']` - The name of the tenancy.
-* `node['setup']['openstack_tenant_id']` - The id for the tenancy.
-* `node['setup']['openstack_auth_url']` - The URL to use for authenticating. Defaults to "https://keystone.rc.nectar.org.au:5000/v2.0/".
-* `node['setup']['openstack_username']` - The NeCTAR username for authenticating.
-* `node['setup']['openstack_password']` - The OpenStack password for authenticating.
-* `node['setup']['openstack_rc_path']` - Pathname for the credentials script.  Defaults to "/etc/openstack/authrc.sh".
-* `node['setup']['openstack_rc_user']` - The owner of the credentials script.  Defaults to 'root'.
-* `node['setup']['openstack_rc_group']` - The owner of the credentials script.  Defaults to 'root'.
-* `node['setup']['openstack_try_pip']` - If true, try to install clients from Pypy, using pip.  Defaults to true.
-* `node['setup']['openstack_try_distro']` - If true, try to install clients from the distro's repository.  Defaults to false.
-* `node['setup']['openstack_use_rdo']` - If true, try to use the Fedora "RDO" repository in preference to the distro's.  Defaults to false.
+* `node['setup']['openstack']['tenant_name']` - The name of the tenancy.
+* `node['setup']['openstack']['tenant_id']` - The id for the tenancy.
+* `node['setup']['openstack']['auth_url']` - The URL to use for authenticating. Defaults to "https://keystone.rc.nectar.org.au:5000/v2.0/".
+* `node['setup']['openstack']['username']` - The NeCTAR username for authenticating.
+* `node['setup']['openstack']['password']` - The OpenStack password for authenticating.
+* `node['setup']['openstack']['rc_path']` - Pathname for the credentials script.  Defaults to "/etc/openstack/authrc.sh".
+* `node['setup']['openstack']['rc_user']` - The owner of the credentials script.  Defaults to 'root'.
+* `node['setup']['openstack']['rc_group']` - The owner of the credentials script.  Defaults to 'root'.
+* `node['setup']['openstack']['try_pip']` - If true, try to install clients from Pypy, using pip.  Defaults to true.
+* `node['setup']['openstack']['try_distro']` - If true, try to install clients from the distro's repository.  Defaults to false.
+* `node['setup']['openstack']['use_rdo']` - If true, try to use the Fedora "RDO" repository in preference to the distro's.  Defaults to false.
 
-If the 'openstack_tenant_name' attribute is defined and non-empty, then a 
+If the 'tenant_name' attribute is defined and non-empty, then a 
 credentials file will be generated containing the details.
 
-The 'openstack_try_pip' and 'openstack_try_distro' attributes allow you to
+The 'try_pip' and 'try_distro' attributes allow you to
 say where to install clients from.  Installing from both places is somewhat
 risky, since you can get interoperability issues.  (For example on Ubuntu
 Precise, there is no Swift client in the package repo, and the Pypy version

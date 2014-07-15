@@ -27,16 +27,8 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Action values are:
-#   - 'ignore' : do nothing
-#   - 'override' : set the root password unconditionally
-#   - 'default' : set the root password if currently unset
-#   - 'disable' : disable the root password
-#   - 'require_set' : fail if the root password is unset.
-password_action = node['setup']['root_password_action'] || 'ignore'
-
-# Supplies the value to be set (if any).
-password_hash = node['setup']['root_password_hash']
+password_action = node['setup']['root_password']['action'] || 'ignore'
+password_hash = node['setup']['root_password']['hash']
 
 # Poke around in the shadow password file to see if a root password is
 # currently set, etcetera
