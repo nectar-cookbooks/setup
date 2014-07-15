@@ -60,6 +60,9 @@ if node['setup']['accounts'] &&
   include_recipe 'setup::accounts'
 end
 
+# Do this unconditionally ......
+include_recipe 'setup::root_password'
+
 if node['setup']['root_email'] then
   include_recipe 'setup::rootmail'
 end
