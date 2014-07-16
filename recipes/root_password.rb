@@ -54,7 +54,7 @@ when 'disable'
     set_password = true
   end
 when 'require_set'
-  raise 'The root password has not been set yet.  Use "passwd root" to set the system password, then rerun chef.'
+  raise 'The root password has not been set yet.  Use "passwd root" to set the system password, then rerun chef.' if is_unset
 else
   raise "Unknown 'root_password_action' #{password_action}"
 end
