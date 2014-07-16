@@ -45,12 +45,15 @@ node.default['setup']['accounts']['sysadmin_group_sudo'] = false
 node.default['setup']['accounts']['sysadmin_group_id'] = nil
 node.default['setup']['accounts']['create_users'] = false
 
-node.default['setup']['root_password']['hash'] = nil
-
 # Action values are:
 #   - 'ignore' : do nothing
 #   - 'override' : set the root password unconditionally
 #   - 'default' : set the root password if currently unset
 #   - 'disable' : disable the root password
 #   - 'require_set' : fail if the root password is unset.
-node.default['setup']['root_password']['action'] = 'require_set'
+node.default['setup']['root_password']['action'] = 'default'
+
+# Combined with the 'default' action, this causes the root password to
+# be disabled if none is currently set.  This is safe and conventient.
+node.default['setup']['root_password']['hash'] = 'X'
+

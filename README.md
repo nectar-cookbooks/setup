@@ -41,8 +41,8 @@ Attributes:
 * `node['setup']['apply_patches']` - This determines whether / how we configure auto-patching.  The standard values are "all", "security" and "none".  The default is "all".  (See the "autopatching" documentation below.)
 * `node['setup']['antivirus']` - This determines whether or not we configure ClamAV for virus checking.  If the attribute is truthy, "clamav" recipe (described below) is run.  The default is false.
 * `node['setup']['openstack']['clients']` - This determines whether or not we install OpenStack clients and credentials.  The default is false.
-* `node['setup']['root_password']['action']` - Controls what the "root_password" recipe does.  Possible values are 'require_set', 'override', 'default', 'disable' and 'ignore'.  See the recipe documentation below for details.  The default is 'require_set'.
-* `node['setup']['root_password']['hash']` - Provides root password value hash, suitable for using in the "shadow" password file..  See the recipe documentation below for details.  The default is 'require_set'.
+* `node['setup']['root_password']['action']` - Controls what the "root_password" recipe does.  Possible values are 'require_set', 'override', 'default', 'disable' and 'ignore'.  See the recipe documentation below for details.  The default is 'default'.
+* `node['setup']['root_password']['hash']` - Provides root password value hash, suitable for using in the "shadow" password file..  See the recipe documentation below for details.  The default is 'X', which implicitly disables the root password.
 
 Note: current scheme for provisioning a NeCTAR node may leave your virtual
 with an invalid hostname.  Using 'set_fqdn' with the value "*" fixes this the first time you run chef-client or chef-solo.  However, this might be "too late" for other recipes.  (The simple way to deal with this is to run just the "setup::default" recipe on a newly provisioned node before adding other recipes to the node's run-list.)

@@ -1,6 +1,12 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.2.1
+-----------
+ - Fix bug in root_password 'require_set', and changed the defaults so
+   that the setup recipe runs out-of-the-box.  (It now disables the root
+   password if one isn't currently set.)
+
 Version 1.2
 -----------
  - Renamed rootmail recipe to root_email
