@@ -27,6 +27,10 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+if platform_family?('debian') then
+  include_recipe 'apt::default'
+end
+
 require 'ipaddr'
 
 if node['setup']['tz'] then

@@ -15,3 +15,5 @@ depends "sudo"
 depends "users"
 depends "python"
 depends "chef-solo-search"
+depends "apt"
+
