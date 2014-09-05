@@ -39,15 +39,21 @@ module ScrapeUrl
   # The *rest options passed to OpenURI.open_uri.  
   # The result is a ney hash with the same keys as the 'regexes' hash,
   # and urls as values.
-  def scrapeUrls(regexs, page_url, *rest)
-    regex = Regexp.new("(['\"])([^'\"]*#{regex.source}[^'\"]*)\\1")
+  def scrapeUrls(regexes, page_url, *rest)
+    # Turn the supplied regexes (for URL substrings) into regexes
+    # to match and extract the entire url (in quotes) from the HTML.
+    full_regexes = {}
+    regexes.each do |key,regex|
+      full_regexes[key] = 
+        Regexp.new("(['\"])([^'\"]*#{regex.source}[^'\"]*)\\1")
+    end
     OpenURI.open_uri(page_url, *rest) do |f|
       if f.status[0] != '200' then
         raise "Unable to fetch page #{page_url}: status = #{f.status}"
       end
       urls = {}
       f.each do |line|
-        regexes.each do |key,regex|
+        full_regexes.each do |key,regex|
           unless urls[key] then
             m = regex.match(line)
             if m then
