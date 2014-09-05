@@ -46,6 +46,7 @@ module ScrapeUrl
     # Turn the supplied regexes (for URL substrings) into regexes
     # to match and extract the entire url (in quotes) from the HTML.
     full_regexes = {}
+    urls = {}
     regexes.each do |key,regex|
       source = regex.kind_of?(String) ? regex : regex.source
       full_regexes[key] = 
@@ -55,7 +56,6 @@ module ScrapeUrl
       if f.status[0] != '200' then
         raise "Unable to fetch page #{page_url}: status = #{f.status}"
       end
-      urls = {}
       f.each do |line|
         full_regexes.each do |key,regex|
           unless urls[key] then
