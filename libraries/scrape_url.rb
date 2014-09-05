@@ -26,22 +26,22 @@
 module ScrapeUrl
 
   # Fetch a page with a download link or links in it, and scrape the first
-  # URL that contains a given pattern.  The 'options' hash contains options
-  # to be passed to OpenURI.open_uri.
-  def scrapeUrl(regex, page_url, options)
-    url = scrapeUrls({'url' => regex}, page_url, options)['url']
+  # URL that contains a given pattern.  The *rest arguments are passed 
+  # to OpenURI.open_uri.
+  def scrapeUrl(regex, page_url, *rest)
+    url = scrapeUrls({'url' => regex}, page_url, *rest)['url']
     raise "Can't find a URL matching /#{regex.source}/ in page #{page_url}" unless url
     return url
   end
 
   # Fetch a page with a download link or links in it, and scrape multiple
   # URLs, one for each pattern.  The regexes are supplied as a hash. 
-  # The 'options' hash contains options to be passed to OpenURI.open_uri.  
+  # The *rest options passed to OpenURI.open_uri.  
   # The result is a ney hash with the same keys as the 'regexes' hash,
   # and urls as values.
-  def scrapeUrls(regexs, page_url, options)
+  def scrapeUrls(regexs, page_url, *rest)
     regex = Regexp.new("(['\"])([^'\"]*#{regex.source}[^'\"]*)\\1")
-    OpenURI.open_uri(page_url, options) do |f|
+    OpenURI.open_uri(page_url, *rest) do |f|
       if f.status[0] != '200' then
         raise "Unable to fetch page #{page_url}: status = #{f.status}"
       end
