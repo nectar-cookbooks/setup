@@ -30,8 +30,11 @@ module ScrapeUrl
   # to OpenURI.open_uri.
   def scrapeUrl(regex, page_url, *rest)
     url = scrapeUrls({'url' => regex}, page_url, *rest)['url']
-    raise "Can't find a URL matching /#{regex.source}/ in page #{page_url}" unless url
-    return url
+    if url then
+      return url
+    end
+    source = regex.kind_of?(String) ? regex : regex.source
+    raise "Can't find a URL matching /#{source}/ in page #{page_url}"
   end
 
   # Fetch a page with a download link or links in it, and scrape multiple
@@ -44,8 +47,9 @@ module ScrapeUrl
     # to match and extract the entire url (in quotes) from the HTML.
     full_regexes = {}
     regexes.each do |key,regex|
+      source = regex.kind_of?(String) ? regex : regex.source
       full_regexes[key] = 
-        Regexp.new("(['\"])([^'\"]*#{regex.source}[^'\"]*)\\1")
+        Regexp.new("(['\"])([^'\"]*#{source}[^'\"]*)\\1")
     end
     OpenURI.open_uri(page_url, *rest) do |f|
       if f.status[0] != '200' then
