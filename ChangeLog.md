@@ -1,6 +1,11 @@
 Change Log for the Setup cookbook
 =================================
 
+Version 1.3
+-----------
+ - Added URL scraper helper library
+ - On Debian-based systems, use 'apt' to refresh repo info before installing.
+
 Version 1.2.1
 -----------
  - Fix bug in root_password 'require_set', and changed the defaults so
