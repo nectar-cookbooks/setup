@@ -112,7 +112,8 @@ clients = [['keystone', 'python-keystoneclient'],
            ['nova', 'python-novaclient'], 
            ['glance', 'python-glanceclient'],
            ['cinder', 'python-cinderclient'],
-           ['heat', 'python-heatclient']]
+           ['heat', 'python-heatclient'],
+           ['ceilometer', 'python-ceilometerclient']]
 
 clients.each do |client|
   if try_distro then
